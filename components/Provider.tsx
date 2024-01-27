@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 import { SWRConfig } from 'swr'
-import { QueryError } from '../lib/types/api'
+import { QueryError } from '../lib/types'
 
 type IAnalyticsContext = {
   error: QueryError | null

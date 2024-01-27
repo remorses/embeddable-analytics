@@ -1,9 +1,12 @@
 import { Fragment } from 'react'
-import Widget from '../Widget'
-import useBrowsers from '../../lib/hooks/use-top-browsers'
-import { formatNumber } from '../../lib/utils'
+import Widget from './Widget'
+
+import { browsers, formatNumber } from '../lib/utils'
 import { DonutChart } from '@tremor/react'
-import { tremorPieChartColors } from '../../styles/theme/tremor-colors'
+import { tremorPieChartColors } from '../styles/theme/tremor-colors'
+import { queryPipe } from '../lib/api'
+import { useDateFilter, useQuery } from '../lib/hooks'
+import { TopBrowsers, TopBrowsersData } from '../lib/types'
 
 export default function BrowsersWidget() {
   const { data, status, warning } = useBrowsers()
@@ -56,4 +59,28 @@ export default function BrowsersWidget() {
       </Widget.Content>
     </Widget>
   )
+}
+
+async function getTopBrowsers(
+  date_from?: string,
+  date_to?: string
+): Promise<TopBrowsers> {
+  const { data: queryData } = await queryPipe<TopBrowsersData>('top_browsers', {
+    date_from,
+    date_to,
+    limit: 4,
+  })
+  const data = [...queryData]
+    .sort((a, b) => b.visits - a.visits)
+    .map(({ browser, visits }) => ({
+      browser: browsers[browser] ?? browser,
+      visits,
+    }))
+
+  return { data }
+}
+
+function useBrowsers() {
+  const { from, to } = useDateFilter()
+  return useQuery([from, to, 'topBrowsers'], getTopBrowsers)
 }

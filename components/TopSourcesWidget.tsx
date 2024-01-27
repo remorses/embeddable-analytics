@@ -1,8 +1,10 @@
 import { BarList } from '@tremor/react'
-import Widget from '../Widget'
-import useTopSources from '../../lib/hooks/use-top-sources'
-import { formatNumber } from '../../lib/utils'
+import Widget from './Widget'
+import { useDateFilter, useQuery } from '../lib/hooks'
+import { formatNumber } from '../lib/utils'
 import { useMemo } from 'react'
+import { queryPipe } from '../lib/api'
+import { TopSources, TopSource } from '../lib/types'
 
 export default function TopSourcesWidget() {
   const { data, status, warning } = useTopSources()
@@ -49,4 +51,36 @@ export default function TopSourcesWidget() {
       </Widget.Content>
     </Widget>
   )
+}
+
+async function getTopSources(
+  date_from?: string,
+  date_to?: string
+): Promise<TopSources> {
+  const { data: queryData } = await queryPipe<TopSource>('top_sources', {
+    limit: 8,
+    date_from,
+    date_to,
+  })
+
+  const data: TopSource[] = [...queryData]
+    .sort((a, b) => b.visits - a.visits)
+    .map(({ referrer, visits }) => ({
+      referrer: referrer || 'Direct',
+      href: referrer ? `https://${referrer}` : undefined,
+      visits,
+    }))
+  const refs = data.map(({ referrer }) => referrer)
+  const visits = data.map(({ visits }) => visits)
+
+  return {
+    data,
+    refs,
+    visits,
+  }
+}
+
+function useTopSources() {
+  const { from, to } = useDateFilter()
+  return useQuery([from, to, 'topSources'], getTopSources)
 }

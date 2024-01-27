@@ -1,4 +1,5 @@
-import useCurrentVisitors from '../lib/hooks/use-current-visitors'
+import useSWR from 'swr'
+import { querySQL } from '../lib/api'
 
 export default function CurrentVisitors() {
   const currentVisitors = useCurrentVisitors()
@@ -10,4 +11,18 @@ export default function CurrentVisitors() {
       }`}</p>
     </div>
   )
+}
+
+async function getCurrentVisitors(): Promise<number> {
+  const { data } = await querySQL<{ visits: number }>(
+    `SELECT uniq(session_id) AS visits FROM analytics_hits
+      WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`
+  )
+  const [{ visits }] = data
+  return visits
+}
+
+function useCurrentVisitors() {
+  const { data } = useSWR('currentVisitors', getCurrentVisitors)
+  return data ?? 0
 }

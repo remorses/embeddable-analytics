@@ -1,8 +1,8 @@
-import Widget from '../Widget'
+import Widget from './Widget'
 import KPIsTabs from './KpisTabs'
-import useKpis from '../../lib/hooks/use-kpis'
-import useKpiTotals from '../../lib/hooks/use-kpi-totals'
-import { AreaChart } from '@tremor/react'
+import { useKpis } from '../lib/hooks'
+import { useKpiTotals } from '../lib/hooks'
+import { BarChart } from '@tremor/react'
 import { useMemo } from 'react'
 
 export default function KPIsWidget() {
@@ -34,7 +34,7 @@ export default function KPIsWidget() {
         warning={warning?.message}
         className="pt-2 mt-4"
       >
-        <AreaChart
+        <BarChart
           data={chartData}
           index="date"
           categories={[kpiOption.label]}

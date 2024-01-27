@@ -19,3 +19,18 @@ export function formatMinSec(totalSeconds: number) {
 export function formatPercentage(value: number) {
   return `${value ? (value * 100).toFixed(2) : '0'}%`
 }
+
+export const devices = {
+  desktop: 'Desktop',
+  'mobile-android': 'Android',
+  'mobile-ios': 'iOS',
+  bot: 'Bots',
+}
+
+export const browsers = {
+  chrome: 'Chrome',
+  safari: 'Safari',
+  opera: 'Opera',
+  firefox: 'Firefox',
+  ie: 'IE',
+}

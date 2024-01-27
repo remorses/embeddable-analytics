@@ -1,9 +1,41 @@
-import { Fragment } from 'react'
 import { DonutChart } from '@tremor/react'
-import Widget from '../Widget'
-import useTopDevices from '../../lib/hooks/use-top-devices'
-import { formatNumber } from '../../lib/utils'
-import { tremorPieChartColors } from '../../styles/theme/tremor-colors'
+import { Fragment } from 'react'
+
+import { browsers, devices, formatNumber } from '../lib/utils'
+import { tremorPieChartColors } from '../styles/theme/tremor-colors'
+import Widget from './Widget'
+import { queryPipe } from '../lib/api'
+import { useDateFilter, useQuery } from '../lib/hooks'
+import {
+  TopBrowsers,
+  TopBrowsersData,
+  TopDevices,
+  TopDevicesData,
+} from '../lib/types'
+
+async function getTopDevices(
+  date_from?: string,
+  date_to?: string
+): Promise<TopDevices> {
+  const { data: queryData } = await queryPipe<TopDevicesData>('top_devices', {
+    date_from,
+    date_to,
+    limit: 4,
+  })
+  const data = [...queryData]
+    .sort((a, b) => b.visits - a.visits)
+    .map(({ device, visits }) => ({
+      device: devices[device] ?? device,
+      visits,
+    }))
+
+  return { data }
+}
+
+export function useTopDevices() {
+  const { from, to } = useDateFilter()
+  return useQuery([from, to, 'topDevices'], getTopDevices)
+}
 
 export default function TopDevicesWidget() {
   const { data, warning, status } = useTopDevices()

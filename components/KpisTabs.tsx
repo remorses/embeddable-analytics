@@ -1,4 +1,4 @@
-import { KpiTotals, KpiType, KPI_OPTIONS } from '../../lib/types/kpis'
+import { KpiTotals, KpiType, KPI_OPTIONS } from '../lib/types'
 
 type KpisTabsProps = {
   value: KpiType

@@ -1,6 +1,6 @@
 import { Card, Title } from '@tremor/react'
 import { ReactNode } from 'react'
-import { QueryStatus } from '../lib/types/api'
+import { QueryStatus } from '../lib/types'
 import { cx } from '../lib/utils'
 import Loader from './Loader'
 

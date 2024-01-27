@@ -1,10 +1,68 @@
-import Widget from '../Widget'
-import useTopLocations from '../../lib/hooks/use-top-locations'
 import { BarList } from '@tremor/react'
 import { useMemo } from 'react'
-import useParams from '../../lib/hooks/use-params'
-import { TopLocationsSorting } from '../../lib/types/top-locations'
-import { cx } from '../../lib/utils'
+import { useDateFilter, useParams, useQuery } from '../lib/hooks'
+import {
+  TopLocation,
+  TopLocationsData,
+  TopLocationsSorting,
+} from '../lib/types'
+import { cx } from '../lib/utils'
+import Widget from './Widget'
+import { queryPipe } from '../lib/api'
+
+function getFlagEmoji(countryCode: string) {
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt(0))
+  return String.fromCodePoint(...codePoints)
+}
+
+async function getTopLocations(
+  sorting: TopLocationsSorting,
+  date_from?: string,
+  date_to?: string
+) {
+  const { data: queryData } = await queryPipe<TopLocationsData>(
+    'top_locations',
+    { limit: 8, date_from, date_to }
+  )
+  const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
+
+  const data: TopLocation[] = [...queryData]
+    .sort((a, b) => b[sorting] - a[sorting])
+    .map(({ location, ...rest }) => {
+      const unknownLocation = '🌎  Unknown'
+      return {
+        location: location
+          ? `${getFlagEmoji(location)} ${regionNames.of(location)}`
+          : unknownLocation,
+        shortLocation: location
+          ? `${getFlagEmoji(location)} ${location}`
+          : unknownLocation,
+        ...rest,
+      }
+    })
+
+  const locations = data.map(({ location }) => location)
+  const labels = data.map(record => record[sorting])
+
+  return {
+    data,
+    locations,
+    labels,
+  }
+}
+
+function useTopLocations() {
+  const { from, to } = useDateFilter()
+  const [sorting] = useParams({
+    key: 'top_locations_sorting',
+    defaultValue: TopLocationsSorting.Visitors,
+    values: Object.values(TopLocationsSorting),
+  })
+  return useQuery([sorting, from, to, 'topLocations'], getTopLocations)
+}
 
 export default function TopLocationsWidget() {
   const { data, status, warning } = useTopLocations()

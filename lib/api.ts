@@ -5,7 +5,7 @@ import {
   QueryPipe,
   QuerySQL,
   QueryError,
-} from './types/api'
+} from './types'
 
 export function getConfig() {
   const params = new URLSearchParams(window.location.search)

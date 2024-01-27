@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import CurrentVisitors from './CurrentVisitors'
 import DateFilter from './DateFilter'
-import useDomain from '../lib/hooks/use-domain'
+import { useDomain } from '../lib/hooks'
 
 export default function Header() {
   const { domain, logo, handleLogoError } = useDomain()

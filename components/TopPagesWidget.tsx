@@ -1,11 +1,10 @@
-import Widget from '../Widget'
-import useTopPages from '../../lib/hooks/use-top-pages'
 import { BarList } from '@tremor/react'
 import { useMemo } from 'react'
-import { cx, formatNumber } from '../../lib/utils'
-import { TopPagesSorting } from '../../lib/types/top-pages'
-import useParams from '../../lib/hooks/use-params'
-import useDomain from '../../lib/hooks/use-domain'
+import { useDateFilter, useDomain, useParams, useQuery } from '../lib/hooks'
+import { TopPagesData, TopPagesSorting } from '../lib/types'
+import { cx, formatNumber } from '../lib/utils'
+import Widget from './Widget'
+import { queryPipe } from '../lib/api'
 
 export default function TopPagesWidget() {
   const { data, status, warning } = useTopPages()
@@ -82,4 +81,46 @@ export default function TopPagesWidget() {
       </Widget.Content>
     </Widget>
   )
+}
+
+async function getTopPages(
+  sorting: TopPagesSorting,
+  date_from?: string,
+  date_to?: string
+) {
+  const { data: queryData, meta } = await queryPipe<TopPagesData>('top_pages', {
+    limit: 8,
+    date_from,
+    date_to,
+  })
+  const data = [...queryData].sort((a, b) => b[sorting] - a[sorting])
+
+  const columnLabels = {
+    pathname: 'content',
+    visits: 'visitors',
+    hits: 'pageviews',
+  }
+  const columns = meta.map(({ name }) => ({
+    label: columnLabels[name],
+    value: name,
+  }))
+  const pages = data.map(({ pathname }) => pathname)
+  const labels = data.map(record => record[sorting])
+
+  return {
+    data,
+    columns,
+    pages,
+    labels,
+  }
+}
+
+function useTopPages() {
+  const { from, to } = useDateFilter()
+  const [sorting] = useParams({
+    key: 'top_pages_sorting',
+    defaultValue: TopPagesSorting.Visitors,
+    values: Object.values(TopPagesSorting),
+  })
+  return useQuery([sorting, from, to, 'topPages'], getTopPages)
 }

@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import Script from 'next/script'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import Widgets from '../components/Widgets'
 import Credentials from '../components/Credentials'
-import useAuth from '../lib/hooks/use-auth'
-import Meta from '../components/Meta'
 import ErrorModal from '../components/ErrorModal'
+import Header from '../components/Header'
+import Meta from '../components/Meta'
+import Widgets from '../components/Widgets'
+import { useAuth } from '../lib/hooks'
 
 export default function DashboardPage() {
   const { isAuthenticated, isTokenValid } = useAuth()
@@ -36,11 +35,6 @@ export default function DashboardPage() {
               {!isAuthenticated && <Credentials />}
             </main>
           </div>
-          {isAuthenticated && (
-            <div className="mt-20">
-              <Footer />
-            </div>
-          )}
         </div>
       </div>
     </>

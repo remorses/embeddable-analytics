@@ -6,8 +6,8 @@ import { QuestionIcon } from './Icons'
 import {
   DateFilter as DateFilterType,
   DateRangePickerOption,
-} from '../lib/types/date-filter'
-import useDateFilter from '../lib/hooks/use-date-filter'
+} from '../lib/types'
+import { useDateFilter } from '../lib/hooks'
 
 const dateFilterOptions: DateRangePickerOption[] = [
   { text: 'Today', value: DateFilterType.Today, startDate: new Date() },

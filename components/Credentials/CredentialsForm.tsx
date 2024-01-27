@@ -2,8 +2,8 @@ import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Select, SelectItem, TextInput, Button } from '@tremor/react'
 
-import { HostType } from '../../lib/types/credentials'
-import { OptionType } from '../../lib/types/options'
+import { HostType } from '../../lib/types'
+import { OptionType } from '../../lib/types'
 
 const hostOptions: OptionType<HostType>[] = [
   { text: HostType.Eu, value: HostType.Eu },

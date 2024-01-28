@@ -8,8 +8,9 @@ SCHEMA >
     `location` SimpleAggregateFunction(any, String),
     `first_hit` SimpleAggregateFunction(min, DateTime),
     `latest_hit` SimpleAggregateFunction(max, DateTime),
-    `hits` AggregateFunction(count)
+    `hits` AggregateFunction(count),
+    `namespace` String
 
 ENGINE "AggregatingMergeTree"
 ENGINE_PARTITION_KEY "toYYYYMM(date)"
-ENGINE_SORTING_KEY "date, session_id"
+ENGINE_SORTING_KEY "date, session_id, namespace"

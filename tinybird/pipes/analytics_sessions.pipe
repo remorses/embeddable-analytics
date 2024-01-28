@@ -12,15 +12,17 @@ SQL >
         anySimpleState(location) AS location,
         minSimpleState(timestamp) AS first_hit,
         maxSimpleState(timestamp) AS latest_hit,
-        countState() AS hits
+        countState() AS hits,
+        namespace
     FROM analytics_hits
     GROUP BY
         date,
-        session_id
+        session_id,
+        namespace
 
 TYPE materialized
 DATASOURCE analytics_sessions_mv
 ENGINE "AggregatingMergeTree"
 ENGINE_PARTITION_KEY "toYYYYMM(date)"
-ENGINE_SORTING_KEY "date, session_id"
+ENGINE_SORTING_KEY "date, session_id, namespace"
 

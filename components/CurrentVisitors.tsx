@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { querySQL } from '../server/api'
+
 
 export default function CurrentVisitors() {
   const currentVisitors = useCurrentVisitors()
@@ -14,6 +14,7 @@ export default function CurrentVisitors() {
 }
 
 async function getCurrentVisitors(): Promise<number> {
+  return 3
   const { data } = await querySQL<{ visits: number }>(
     `SELECT uniq(session_id) AS visits FROM analytics_hits
       WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`

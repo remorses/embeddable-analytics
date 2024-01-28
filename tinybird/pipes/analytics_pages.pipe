@@ -11,18 +11,20 @@ SQL >
         location,
         pathname,
         uniqState(session_id) AS visits,
-        countState() AS hits
+        countState() AS hits,
+        namespace
     FROM analytics_hits
     GROUP BY
         date,
         device,
         browser,
         location,
-        pathname
+        pathname,
+        namespace
 
 TYPE materialized
 DATASOURCE analytics_pages_mv
 ENGINE "AggregatingMergeTree"
 ENGINE_PARTITION_KEY "toYYYYMM(date)"
-ENGINE_SORTING_KEY "date, device, browser, location, pathname"
+ENGINE_SORTING_KEY "date, device, browser, location, pathname, namespace"
 

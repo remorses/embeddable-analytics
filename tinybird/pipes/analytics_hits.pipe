@@ -20,7 +20,8 @@ SQL >
       JSONExtractString(payload, 'referrer') as referrer,
       JSONExtractString(payload, 'pathname') as pathname,
       JSONExtractString(payload, 'href') as href,
-      lower(JSONExtractString(payload, 'user-agent')) as user_agent
+      lower(JSONExtractString(payload, 'user-agent')) as user_agent,
+      namespace
     FROM
       analytics_events
     where action = 'page_hit'
@@ -39,6 +40,7 @@ SQL >
       referrer,
       pathname,
       href,
+      namespace,
       case
         when match(user_agent, 'wget|ahrefsbot|curl|urllib|bitdiscovery|\+https://|googlebot') then 'bot'
         when match(user_agent, 'android') then 'mobile-android'

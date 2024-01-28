@@ -16,7 +16,8 @@ SQL >
         location,
         referrer,
         uniqState(session_id) AS visits,
-        countState() AS hits
+        countState() AS hits,
+        namespace
     FROM analytics_hits
     WHERE domainWithoutWWW(referrer) != currenct_domain
     GROUP BY
@@ -24,11 +25,12 @@ SQL >
         device,
         browser,
         location,
-        referrer
+        referrer,
+        namespace
 
 TYPE materialized
 DATASOURCE analytics_sources_mv
 ENGINE "AggregatingMergeTree"
 ENGINE_PARTITION_KEY "toYYYYMM(date)"
-ENGINE_SORTING_KEY "date, device, browser, location, referrer"
+ENGINE_SORTING_KEY "date, device, browser, location, referrer, namespace"
 

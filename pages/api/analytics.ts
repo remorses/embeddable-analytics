@@ -8,6 +8,7 @@ export default async function route(req: NextRequest) {
   const namespace: string = json.namespace
   // do auth here
   const data = await getData({ ...json, token, namespace })
+//   console.log(data)
   return NextResponse.json(data)
 }
 

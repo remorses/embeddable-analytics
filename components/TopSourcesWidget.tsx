@@ -1,9 +1,9 @@
 import { BarList } from '@tremor/react'
 import Widget from './Widget'
 import { useDateFilter, useQuery } from '../lib/hooks'
-import { formatNumber } from '../lib/utils'
+import { formatNumber, getPipeFromClient } from '../lib/utils'
 import { useMemo } from 'react'
-import { queryPipe } from '../lib/api'
+
 import { TopSources, TopSource } from '../lib/types'
 
 export default function TopSourcesWidget() {
@@ -57,7 +57,7 @@ async function getTopSources(
   date_from?: string,
   date_to?: string
 ): Promise<TopSources> {
-  const { data: queryData } = await queryPipe<TopSource>('top_sources', {
+  const { data: queryData } = await getPipeFromClient<TopSource>('top_sources', {
     limit: 8,
     date_from,
     date_to,

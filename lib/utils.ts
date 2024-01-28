@@ -1,3 +1,10 @@
+
+
+export const globalState = {
+  namespace: '',
+  apiEndpoint: '',
+}
+
 export const cx = (...args: (string | undefined | false)[]) =>
   args.filter(Boolean).join(' ')
 
@@ -33,4 +40,33 @@ export const browsers = {
   opera: 'Opera',
   firefox: 'Firefox',
   ie: 'IE',
+}
+
+export async function getPipeFromClient<T>(
+  pipe,
+  { date_from, date_to, limit = undefined as number | undefined }
+): Promise<QueryPipe<T>> {
+  const { apiEndpoint, namespace } = globalState
+  if (!apiEndpoint) throw new Error('apiEndpoint not set')
+  if (!namespace) throw new Error('namespace not set')
+  const res = await fetch(apiEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      pipe,
+      namespace,
+      date_from,
+      date_to,
+      limit,
+    }),
+  })
+  if (!res.ok) {
+    throw new Error(
+      `Something went wrong: ${await res.status} ${await res.text()}`
+    )
+  }
+  const json = await res.json()
+  return json
 }

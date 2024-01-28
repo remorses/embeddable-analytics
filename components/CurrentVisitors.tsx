@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { querySQL } from '../lib/api'
+import { querySQL } from '../server/api'
 
 export default function CurrentVisitors() {
   const currentVisitors = useCurrentVisitors()

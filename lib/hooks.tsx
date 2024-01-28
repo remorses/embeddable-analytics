@@ -10,44 +10,7 @@ import {
   useState,
 } from 'react'
 import useSWR, { Fetcher, Key } from 'swr'
-import { useAnalytics } from '../components/Provider'
-import { queryPipe, querySQL } from './api'
-import {
-  ChartValue,
-  DateFilter,
-  DomainData,
-  DomainQueryData,
-  KPI_OPTIONS,
-  KpiTotals,
-  KpiType,
-  KpisData,
-  QueryError,
-  QueryResponse,
-  TopBrowsers,
-  TopBrowsersData,
-  TopDevices,
-  TopDevicesData,
-  TopPagesData,
-  TopPagesSorting,
-  TopSource,
-  TopSources,
-  Trend,
-  TrendData,
-  dateFormat,
-  isKpi,
-} from './types'
-import { browsers, devices } from './utils'
-
-export function useAuth() {
-  const router = useRouter()
-  const { token: tokenParam, host: hostParam } = router.query
-  const token = typeof tokenParam === 'string' ? tokenParam : null
-  const host = typeof hostParam === 'string' ? hostParam : null
-  const { error } = useAnalytics()
-  const isTokenValid = !error || ![401, 403].includes(error.status ?? 0)
-  const isAuthenticated = !!token && !!host
-  return { isAuthenticated, token, host, isTokenValid }
-}
+import { DateFilter, QueryError, QueryResponse, dateFormat } from './types'
 
 export function useDateFilter() {
   const router = useRouter()
@@ -139,57 +102,6 @@ export function useDateFilter() {
   }
 }
 
-async function getDomain(): Promise<DomainData> {
-  // Guess the instrumented domain, and exclude other domains like development or staging.
-  //  - Try to get the domain with most hits from the last hour.
-  //  - Fallback to 'some' domain.
-  // Best balance between data accuracy and performance I can get.
-  const { data } = await querySQL<DomainQueryData>(`
-    with (
-      SELECT nullif(domainWithoutWWW(href),'') as domain
-      FROM analytics_hits
-      where timestamp >= now() - interval 1 hour
-      group by domain
-      order by count(1) desc
-      limit 1
-    ) as top_domain,
-    (
-      SELECT domainWithoutWWW(href)
-      FROM analytics_hits
-      where href not like '%localhost%'
-      limit 1
-    ) as some_domain
-    select coalesce(top_domain, some_domain) as domain format JSON
-  `)
-  const domain = data[0]['domain']
-  const logo = domain ? `https://${domain}/favicon.ico` : FALLBACK_LOGO
-
-  return {
-    domain,
-    logo,
-  }
-}
-
-const FALLBACK_LOGO = '/fallback-logo.png'
-
-export function useDomain() {
-  const [logo, setLogo] = useState(FALLBACK_LOGO)
-
-  const { data } = useSWR('domain', getDomain, {
-    onSuccess: ({ logo }) => setLogo(logo),
-  })
-
-  const handleLogoError = () => {
-    setLogo(FALLBACK_LOGO)
-  }
-
-  return {
-    domain: data?.domain ?? 'domain.com',
-    logo,
-    handleLogoError,
-  }
-}
-
 export function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback)
 
@@ -278,8 +190,3 @@ export function useQuery<T, K extends Key>(
 
   return { ...query, warning, status: getStatus() }
 }
-
-
-
-import { TopLocation, TopLocationsData, TopLocationsSorting } from './types'
-

@@ -1,10 +1,10 @@
 import { Fragment } from 'react'
 import Widget from './Widget'
 
-import { browsers, formatNumber } from '../lib/utils'
+import { browsers, formatNumber, getPipeFromClient } from '../lib/utils'
 import { DonutChart } from '@tremor/react'
 import { tremorPieChartColors } from '../styles/theme/tremor-colors'
-import { queryPipe } from '../lib/api'
+
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { TopBrowsers, TopBrowsersData } from '../lib/types'
 
@@ -65,11 +65,14 @@ async function getTopBrowsers(
   date_from?: string,
   date_to?: string
 ): Promise<TopBrowsers> {
-  const { data: queryData } = await queryPipe<TopBrowsersData>('top_browsers', {
-    date_from,
-    date_to,
-    limit: 4,
-  })
+  const { data: queryData } = await getPipeFromClient<TopBrowsersData>(
+    'top_browsers',
+    {
+      date_from,
+      date_to,
+      limit: 4,
+    }
+  )
   const data = [...queryData]
     .sort((a, b) => b.visits - a.visits)
     .map(({ browser, visits }) => ({

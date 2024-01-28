@@ -3,11 +3,7 @@ import AnalyticsProvider from '../components/Provider'
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <AnalyticsProvider>
-      <Component {...pageProps} />
-    </AnalyticsProvider>
-  )
+  return <Component {...pageProps} />
 }
 
 export default MyApp

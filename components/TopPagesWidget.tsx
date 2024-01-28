@@ -1,14 +1,15 @@
 import { BarList } from '@tremor/react'
 import { useMemo } from 'react'
-import { useDateFilter, useDomain, useParams, useQuery } from '../lib/hooks'
+import { useDateFilter, useParams, useQuery } from '../lib/hooks'
 import { TopPagesData, TopPagesSorting } from '../lib/types'
-import { cx, formatNumber } from '../lib/utils'
+import { cx, formatNumber, getPipeFromClient } from '../lib/utils'
 import Widget from './Widget'
-import { queryPipe } from '../lib/api'
+
+import { useAnalytics } from './Provider'
 
 export default function TopPagesWidget() {
   const { data, status, warning } = useTopPages()
-  const { domain } = useDomain()
+  const { domain } = useAnalytics()
   const [sorting, setSorting] = useParams({
     key: 'top_pages_sorting',
     values: Object.values(TopPagesSorting),
@@ -88,11 +89,14 @@ async function getTopPages(
   date_from?: string,
   date_to?: string
 ) {
-  const { data: queryData, meta } = await queryPipe<TopPagesData>('top_pages', {
-    limit: 8,
-    date_from,
-    date_to,
-  })
+  const { data: queryData, meta } = await getPipeFromClient<TopPagesData>(
+    'top_pages',
+    {
+      limit: 8,
+      date_from,
+      date_to,
+    }
+  )
   const data = [...queryData].sort((a, b) => b[sorting] - a[sorting])
 
   const columnLabels = {

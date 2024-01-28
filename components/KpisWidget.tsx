@@ -5,7 +5,7 @@ import { BarChart } from '@tremor/react'
 import { useMemo } from 'react'
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import { queryPipe } from '../lib/api'
+
 import {
   KpiTotals,
   KpisData,
@@ -15,6 +15,7 @@ import {
   isKpi,
   KPI_OPTIONS,
 } from '../lib/types'
+import { getPipeFromClient } from '../lib/utils'
 
 export default function KPIsWidget() {
   const { data, kpi, setKpi, kpiOption, warning, status } = useKpis()
@@ -76,7 +77,7 @@ async function getKpiTotals(
   date_to_aux.setDate(date_to_aux.getDate() + 1)
   const date_to_aux_str = date_to_aux.toISOString().substring(0, 10)
 
-  const { data } = await queryPipe<KpisData>('kpis', {
+  const { data } = await getPipeFromClient<KpisData>('kpis', {
     date_from,
     date_to: date_to_aux_str,
   })
@@ -145,7 +146,7 @@ const arrayHasCurrentDate = (dates: string[], isHourlyGranularity: boolean) => {
 }
 
 async function getKpis(kpi: KpiType, date_from?: string, date_to?: string) {
-  const { data: queryData } = await queryPipe<KpisData>('kpis', {
+  const { data: queryData } = await getPipeFromClient<KpisData>('kpis', {
     date_from,
     date_to,
   })

@@ -6,9 +6,9 @@ import {
   TopLocationsData,
   TopLocationsSorting,
 } from '../lib/types'
-import { cx } from '../lib/utils'
+import { cx, getPipeFromClient } from '../lib/utils'
 import Widget from './Widget'
-import { queryPipe } from '../lib/api'
+
 
 function getFlagEmoji(countryCode: string) {
   const codePoints = countryCode
@@ -23,7 +23,7 @@ async function getTopLocations(
   date_from?: string,
   date_to?: string
 ) {
-  const { data: queryData } = await queryPipe<TopLocationsData>(
+  const { data: queryData } = await getPipeFromClient<TopLocationsData>(
     'top_locations',
     { limit: 8, date_from, date_to }
   )
@@ -138,5 +138,3 @@ export default function TopLocationsWidget() {
     </Widget>
   )
 }
-
-

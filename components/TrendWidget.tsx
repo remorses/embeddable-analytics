@@ -3,8 +3,9 @@ import Widget from './Widget'
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { useMemo } from 'react'
 import moment from 'moment'
-import { queryPipe } from '../lib/api'
+
 import { Trend, TrendData } from '../lib/types'
+import { getPipeFromClient } from '../lib/utils'
 
 export default function TrendWidget() {
   const { data, status, warning } = useTrend()
@@ -51,7 +52,7 @@ export async function getTrend(
   date_from?: string,
   date_to?: string
 ): Promise<Trend> {
-  const { data } = await queryPipe<TrendData>('trend', { date_from, date_to })
+  const { data } = await getPipeFromClient<TrendData>('trend', { date_from, date_to })
   const visits = data.map(({ visits }) => visits)
   const dates = data.map(({ t }) => {
     return moment(t).format('HH:mm')

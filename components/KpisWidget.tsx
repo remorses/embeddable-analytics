@@ -67,6 +67,7 @@ export default function KPIsWidget() {
 }
 
 async function getKpiTotals({ date_from, date_to }): Promise<KpiTotals> {
+  console.log('getKpiTotals', date_from, date_to)
   /**
    * If we sent the same value for date_from and date_to, the result is one row per hour.
    *
@@ -137,7 +138,7 @@ function getNotFoundColumnsWarning(warning: QueryError | null): string | null {
 }
 
 const arrayHasCurrentDate = (dates: string[], isHourlyGranularity: boolean) => {
-  const now = format(new Date(), isHourlyGranularity ? 'HH:00' : 'MMM DD, YYYY')
+  const now = format(new Date(), isHourlyGranularity ? 'HH:00' : 'MMM dd, yyyy')
   return dates[dates.length - 1] === now
 }
 
@@ -147,8 +148,8 @@ async function getKpis({
   date_to,
 }: {
   kpi: KpiType
-  date_from?: string
-  date_to?: string
+  date_from: string
+  date_to: string
 }) {
   const { data: queryData } = await getPipeFromClient<KpisData>('kpis', {
     date_from,
@@ -156,7 +157,7 @@ async function getKpis({
   })
   const isHourlyGranularity = !!date_from && !!date_to && date_from === date_to
   const dates = queryData.map(({ date }) =>
-    format(new Date(date), isHourlyGranularity ? 'HH:00' : 'MMM DD, YYYY')
+    format(new Date(date), isHourlyGranularity ? 'HH:00' : 'MMM dd, yyyy')
   )
   const isCurrentData = arrayHasCurrentDate(dates, isHourlyGranularity)
 
@@ -186,12 +187,12 @@ async function getKpis({
 }
 
 function useKpis() {
-  const { date_from: from, date_to: to } = useDateFilter()
+  const { date_from, date_to } = useDateFilter()
   const router = useRouter()
   const { kpi: kpiParam } = router.query
   const kpi = isKpi(kpiParam) ? kpiParam : 'visits'
   const kpiOption = KPI_OPTIONS.find(({ value }) => value === kpi)!
-  const query = useQuery({ kpi, from, to, key: 'kpis' }, getKpis)
+  const query = useQuery({ kpi, date_from, date_to, key: 'kpis' }, getKpis)
 
   const setKpi = (kpi: KpiType) => {
     const searchParams = new URLSearchParams(window.location.search)

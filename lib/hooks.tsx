@@ -54,19 +54,19 @@ export function useDateFilter() {
 
   const { from: date_from, to: date_to } = useMemo(() => {
     const today = new Date()
-    const sevenDaysAgo = format(subDays(today, 7), dateFormat)
+
     if (lastDays === DateFilter.Custom) {
       const fromParam = router.query.start_date as string
       const toParam = router.query.end_date as string
 
-      const from = fromParam || sevenDaysAgo
+      const from = fromParam || format(subDays(today, 7), dateFormat)
 
       const to = toParam || format(today, dateFormat)
 
       return { from, to }
     }
 
-    const from = sevenDaysAgo
+    const from = format(subDays(today, Number(lastDays)), dateFormat)
     const to =
       lastDays === DateFilter.Yesterday
         ? format(subDays(today, 1), dateFormat)
@@ -94,6 +94,10 @@ export function useDateFilter() {
     [setDateFilter]
   )
 
+  console.log({
+    date_from,
+    date_to,
+  })
   return {
     date_from: date_from,
     date_to: date_to,

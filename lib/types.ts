@@ -82,7 +82,7 @@ export type DateRangePickerOption = {
   startDate: Date
 }
 
-export const dateFormat = 'YYYY-MM-DD'
+export const dateFormat = 'yyyy-MM-dd'
 
 export type DomainQueryData = { domain: string }
 

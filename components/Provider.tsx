@@ -20,6 +20,7 @@ export default function AnalyticsProvider({ children, domain }) {
     <SWRConfig
       value={{
         revalidateOnFocus: false,
+
         refreshInterval: 120_000,
         dedupingInterval: 0,
         revalidateOnMount: true,

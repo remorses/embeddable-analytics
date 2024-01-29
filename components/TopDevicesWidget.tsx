@@ -18,10 +18,13 @@ import {
   TopDevicesData,
 } from '../lib/types'
 
-async function getTopDevices(
-  date_from?: string,
+async function getTopDevices({
+  date_from,
+  date_to,
+}: {
+  date_from?: string
   date_to?: string
-): Promise<TopDevices> {
+}): Promise<TopDevices> {
   const { data: queryData } = await getPipeFromClient<TopDevicesData>(
     'top_devices',
     {
@@ -41,13 +44,13 @@ async function getTopDevices(
 }
 
 export function useTopDevices() {
-  const { from, to } = useDateFilter()
-  return useQuery([from, to, 'topDevices'], getTopDevices)
+  const { date_from: date_from, date_to: date_to } = useDateFilter()
+  return useQuery({ date_from, date_to, key: 'topDevices' }, getTopDevices)
 }
 
 export default function TopDevicesWidget() {
   const { data, warning, status } = useTopDevices()
-  
+
   return (
     <Widget>
       <Widget.Title>Top Devices</Widget.Title>

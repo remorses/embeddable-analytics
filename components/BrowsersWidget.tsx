@@ -9,7 +9,12 @@ import { useDateFilter, useQuery } from '../lib/hooks'
 import { TopBrowsers, TopBrowsersData } from '../lib/types'
 
 export default function BrowsersWidget() {
-  const { data, status, warning } = useBrowsers()
+  const { date_from: from, date_to: to } = useDateFilter()
+
+  const { data, status, warning } = useQuery(
+    { date_from: from, date_to: to, key: 'topBrowsers' },
+    getTopBrowsers
+  )
 
   return (
     <Widget>
@@ -61,10 +66,7 @@ export default function BrowsersWidget() {
   )
 }
 
-async function getTopBrowsers(
-  date_from?: string,
-  date_to?: string
-): Promise<TopBrowsers> {
+async function getTopBrowsers({ date_from, date_to }): Promise<TopBrowsers> {
   const { data: queryData } = await getPipeFromClient<TopBrowsersData>(
     'top_browsers',
     {
@@ -81,9 +83,4 @@ async function getTopBrowsers(
     }))
 
   return { data }
-}
-
-function useBrowsers() {
-  const { from, to } = useDateFilter()
-  return useQuery([from, to, 'topBrowsers'], getTopBrowsers)
 }

@@ -2,17 +2,17 @@ import { BarChart } from '@tremor/react'
 import Widget from './Widget'
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { useMemo } from 'react'
-import moment from 'moment'
 
 import { Trend, TrendData } from '../lib/types'
 import { getPipeFromClient } from '../lib/utils'
+import { format } from 'date-fns'
 
 export default function TrendWidget() {
   const { data, status, warning } = useTrend()
   const chartData = useMemo(
     () =>
       (data?.data ?? []).map(d => ({
-        Date: moment(d.t).format('HH:mm'),
+        Date: format(new Date(d.t), 'HH:mm'),
         'Number of visits': d.visits,
       })),
     [data]
@@ -48,14 +48,14 @@ export default function TrendWidget() {
   )
 }
 
-export async function getTrend(
-  date_from?: string,
-  date_to?: string
-): Promise<Trend> {
-  const { data } = await getPipeFromClient<TrendData>('trend', { date_from, date_to })
+export async function getTrend({ date_from, date_to }): Promise<Trend> {
+  const { data } = await getPipeFromClient<TrendData>('trend', {
+    date_from,
+    date_to,
+  })
   const visits = data.map(({ visits }) => visits)
   const dates = data.map(({ t }) => {
-    return moment(t).format('HH:mm')
+    return format(new Date(t), 'HH:mm')
   })
   const totalVisits = visits.reduce((a, b) => a + b, 0)
 
@@ -68,6 +68,6 @@ export async function getTrend(
 }
 
 function useTrend() {
-  const { from, to } = useDateFilter()
-  return useQuery([from, to, 'trend'], getTrend)
+  const { date_from, date_to } = useDateFilter()
+  return useQuery({ date_from, date_to, key: getTrend }, getTrend)
 }

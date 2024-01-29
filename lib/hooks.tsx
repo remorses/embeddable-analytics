@@ -1,5 +1,7 @@
 import { DateRangePickerValue } from '@tremor/react'
-import moment from 'moment'
+
+import { format, subDays } from 'date-fns'
+
 import { useRouter } from 'next/router'
 import {
   useCallback,
@@ -25,8 +27,8 @@ export function useDateFilter() {
       searchParams.set('last_days', lastDays)
 
       if (lastDays === DateFilter.Custom && from && to) {
-        searchParams.set('start_date', moment(from).format(dateFormat))
-        searchParams.set('end_date', moment(to).format(dateFormat))
+        searchParams.set('start_date', format(from, dateFormat))
+        searchParams.set('end_date', format(to, dateFormat))
       } else {
         searchParams.delete('start_date')
         searchParams.delete('end_date')
@@ -50,38 +52,36 @@ export function useDateFilter() {
       ? lastDaysParam
       : DateFilter.Last7Days
 
-  const { from, to } = useMemo(() => {
-    const today = moment().utc()
+  const { from: date_from, to: date_to } = useMemo(() => {
+    const today = new Date()
+    const sevenDaysAgo = format(subDays(today, 7), dateFormat)
     if (lastDays === DateFilter.Custom) {
       const fromParam = router.query.start_date as string
       const toParam = router.query.end_date as string
 
-      const from =
-        fromParam ||
-        moment(today).subtract(+DateFilter.Last7Days, 'days').format(dateFormat)
-      const to = toParam || moment(today).format(dateFormat)
+      const from = fromParam || sevenDaysAgo
+
+      const to = toParam || format(today, dateFormat)
 
       return { from, to }
     }
 
-    const from = moment(today).subtract(+lastDays, 'days').format(dateFormat)
+    const from = sevenDaysAgo
     const to =
       lastDays === DateFilter.Yesterday
-        ? moment(today)
-            .subtract(+DateFilter.Yesterday, 'days')
-            .format(dateFormat)
-        : moment(today).format(dateFormat)
+        ? format(subDays(today, 1), dateFormat)
+        : format(today, dateFormat)
 
     return { from, to }
   }, [lastDays, router.query.start_date, router.query.end_date])
 
   useEffect(() => {
     setDateRangePickerValue({
-      from: moment(from).toDate(),
-      to: moment(to).toDate(),
+      from: new Date(date_from),
+      to: new Date(date_from),
       selectValue: lastDays === DateFilter.Custom ? undefined : lastDays,
     })
-  }, [from, to, lastDays])
+  }, [date_from, date_to, lastDays])
 
   const onDateRangePickerValueChange = useCallback(
     ({ from, to, selectValue }: DateRangePickerValue) => {
@@ -95,8 +95,8 @@ export function useDateFilter() {
   )
 
   return {
-    from,
-    to,
+    date_from: date_from,
+    date_to: date_to,
     dateRangePickerValue,
     onDateRangePickerValueChange,
   }

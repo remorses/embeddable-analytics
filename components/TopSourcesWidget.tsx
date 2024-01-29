@@ -53,15 +53,15 @@ export default function TopSourcesWidget() {
   )
 }
 
-async function getTopSources(
-  date_from?: string,
-  date_to?: string
-): Promise<TopSources> {
-  const { data: queryData } = await getPipeFromClient<TopSource>('top_sources', {
-    limit: 8,
-    date_from,
-    date_to,
-  })
+async function getTopSources({ date_from, date_to }): Promise<TopSources> {
+  const { data: queryData } = await getPipeFromClient<TopSource>(
+    'top_sources',
+    {
+      limit: 8,
+      date_from,
+      date_to,
+    }
+  )
 
   const data: TopSource[] = [...queryData]
     .sort((a, b) => b.visits - a.visits)
@@ -81,6 +81,6 @@ async function getTopSources(
 }
 
 function useTopSources() {
-  const { from, to } = useDateFilter()
-  return useQuery([from, to, 'topSources'], getTopSources)
+  const { date_from, date_to } = useDateFilter()
+  return useQuery({ date_from, date_to, key: 'topSources' }, getTopSources)
 }

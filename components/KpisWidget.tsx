@@ -3,7 +3,7 @@ import KPIsTabs from './KpisTabs'
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { BarChart } from '@tremor/react'
 import { useMemo } from 'react'
-import moment from 'moment'
+
 import { useRouter } from 'next/router'
 
 import {
@@ -16,10 +16,17 @@ import {
   KPI_OPTIONS,
 } from '../lib/types'
 import { getPipeFromClient } from '../lib/utils'
+import { format } from 'date-fns'
 
 export default function KPIsWidget() {
   const { data, kpi, setKpi, kpiOption, warning, status } = useKpis()
-  const { data: kpiTotals, warning: warningTotals } = useKpiTotals()
+
+  const { date_from: from, date_to: to } = useDateFilter()
+  const { data: kpiTotals, warning: warningTotals } = useQuery(
+    { date_from: from, date_to: to, key: 'kpiTotals' },
+    getKpiTotals
+  )
+
   const chartData = useMemo(
     () =>
       (data?.dates ?? []).map((date, index) => {
@@ -59,10 +66,7 @@ export default function KPIsWidget() {
   )
 }
 
-async function getKpiTotals(
-  date_from?: string,
-  date_to?: string
-): Promise<KpiTotals> {
+async function getKpiTotals({ date_from, date_to }): Promise<KpiTotals> {
   /**
    * If we sent the same value for date_from and date_to, the result is one row per hour.
    *
@@ -132,27 +136,27 @@ function getNotFoundColumnsWarning(warning: QueryError | null): string | null {
   }
 }
 
-function useKpiTotals() {
-  const { from, to } = useDateFilter()
-  const { warning, ...query } = useQuery([from, to, 'kpiTotals'], getKpiTotals)
-  return { ...query, warning: getNotFoundColumnsWarning(warning) }
-}
-
 const arrayHasCurrentDate = (dates: string[], isHourlyGranularity: boolean) => {
-  const now = moment()
-    .utc()
-    .format(isHourlyGranularity ? 'HH:00' : 'MMM DD, YYYY')
+  const now = format(new Date(), isHourlyGranularity ? 'HH:00' : 'MMM DD, YYYY')
   return dates[dates.length - 1] === now
 }
 
-async function getKpis(kpi: KpiType, date_from?: string, date_to?: string) {
+async function getKpis({
+  kpi,
+  date_from,
+  date_to,
+}: {
+  kpi: KpiType
+  date_from?: string
+  date_to?: string
+}) {
   const { data: queryData } = await getPipeFromClient<KpisData>('kpis', {
     date_from,
     date_to,
   })
   const isHourlyGranularity = !!date_from && !!date_to && date_from === date_to
   const dates = queryData.map(({ date }) =>
-    moment(date).format(isHourlyGranularity ? 'HH:mm' : 'MMM DD, YYYY')
+    format(new Date(date), isHourlyGranularity ? 'HH:00' : 'MMM DD, YYYY')
   )
   const isCurrentData = arrayHasCurrentDate(dates, isHourlyGranularity)
 
@@ -182,12 +186,12 @@ async function getKpis(kpi: KpiType, date_from?: string, date_to?: string) {
 }
 
 function useKpis() {
-  const { from, to } = useDateFilter()
+  const { date_from: from, date_to: to } = useDateFilter()
   const router = useRouter()
   const { kpi: kpiParam } = router.query
   const kpi = isKpi(kpiParam) ? kpiParam : 'visits'
   const kpiOption = KPI_OPTIONS.find(({ value }) => value === kpi)!
-  const query = useQuery([kpi, from, to, 'kpis'], getKpis)
+  const query = useQuery({ kpi, from, to, key: 'kpis' }, getKpis)
 
   const setKpi = (kpi: KpiType) => {
     const searchParams = new URLSearchParams(window.location.search)

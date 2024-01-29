@@ -9,7 +9,6 @@ import {
 import { cx, getPipeFromClient } from '../lib/utils'
 import Widget from './Widget'
 
-
 function getFlagEmoji(countryCode: string) {
   const codePoints = countryCode
     .toUpperCase()
@@ -18,11 +17,15 @@ function getFlagEmoji(countryCode: string) {
   return String.fromCodePoint(...codePoints)
 }
 
-async function getTopLocations(
-  sorting: TopLocationsSorting,
-  date_from?: string,
+async function getTopLocations({
+  date_from,
+  date_to,
+  sorting,
+}: {
+  sorting: TopLocationsSorting
+  date_from?: string
   date_to?: string
-) {
+}) {
   const { data: queryData } = await getPipeFromClient<TopLocationsData>(
     'top_locations',
     { limit: 8, date_from, date_to }
@@ -55,13 +58,16 @@ async function getTopLocations(
 }
 
 function useTopLocations() {
-  const { from, to } = useDateFilter()
+  const { date_from, date_to } = useDateFilter()
   const [sorting] = useParams({
     key: 'top_locations_sorting',
     defaultValue: TopLocationsSorting.Visitors,
     values: Object.values(TopLocationsSorting),
   })
-  return useQuery([sorting, from, to, 'topLocations'], getTopLocations)
+  return useQuery(
+    { sorting, date_from, date_to, key: 'topLocations' },
+    getTopLocations
+  )
 }
 
 export default function TopLocationsWidget() {

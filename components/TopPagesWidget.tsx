@@ -84,11 +84,15 @@ export default function TopPagesWidget() {
   )
 }
 
-async function getTopPages(
-  sorting: TopPagesSorting,
-  date_from?: string,
+async function getTopPages({
+  date_from,
+  date_to,
+  sorting,
+}: {
+  sorting: TopPagesSorting
+  date_from?: string
   date_to?: string
-) {
+}) {
   const { data: queryData, meta } = await getPipeFromClient<TopPagesData>(
     'top_pages',
     {
@@ -120,11 +124,11 @@ async function getTopPages(
 }
 
 function useTopPages() {
-  const { from, to } = useDateFilter()
+  const { date_from, date_to } = useDateFilter()
   const [sorting] = useParams({
     key: 'top_pages_sorting',
     defaultValue: TopPagesSorting.Visitors,
     values: Object.values(TopPagesSorting),
   })
-  return useQuery([sorting, from, to, 'topPages'], getTopPages)
+  return useQuery({ sorting, date_from, date_to, key: 'topPages' }, getTopPages)
 }

@@ -67,7 +67,7 @@ export default function KPIsWidget() {
 }
 
 async function getKpiTotals({ date_from, date_to }): Promise<KpiTotals> {
-  console.log('getKpiTotals', date_from, date_to)
+  // console.log('getKpiTotals', date_from, date_to)
   /**
    * If we sent the same value for date_from and date_to, the result is one row per hour.
    *

@@ -94,10 +94,10 @@ export function useDateFilter() {
     [setDateFilter]
   )
 
-  console.log({
-    date_from,
-    date_to,
-  })
+  // console.log({
+  //   date_from,
+  //   date_to,
+  // })
   return {
     date_from: date_from,
     date_to: date_to,

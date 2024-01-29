@@ -36,7 +36,7 @@ const dateFilterOptions: DateRangePickerOption[] = [
 
 export default function DateFilter() {
   const { dateRangePickerValue, onDateRangePickerValueChange } = useDateFilter()
-
+  // console.log({ dateRangePickerValue })
   return (
     <div className="flex items-center gap-4">
       <Popover className="relative h-4">

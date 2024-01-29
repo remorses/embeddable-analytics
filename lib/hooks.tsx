@@ -76,9 +76,12 @@ export function useDateFilter() {
   }, [lastDays, router.query.start_date, router.query.end_date])
 
   useEffect(() => {
+    const from = new Date(date_from)
+    const to = new Date(date_to)
+    // console.log({ from, to, date_from, date_to })
     setDateRangePickerValue({
-      from: new Date(date_from),
-      to: new Date(date_from),
+      from,
+      to,
       selectValue: lastDays === DateFilter.Custom ? undefined : lastDays,
     })
   }, [date_from, date_to, lastDays])

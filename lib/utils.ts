@@ -1,4 +1,4 @@
-
+import { QueryPipe } from './types'
 
 export const globalState = {
   namespace: '',

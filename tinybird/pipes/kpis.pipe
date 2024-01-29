@@ -79,6 +79,7 @@ SQL >
           {% else %}
             and date <= today()
           {% end %}
+          and namespace = {{String(namespace, required=True)}}
         group by
           date, session_id
         {% end %}

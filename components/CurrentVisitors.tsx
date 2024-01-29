@@ -15,12 +15,12 @@ export default function CurrentVisitors() {
 
 async function getCurrentVisitors(): Promise<number> {
   return 3
-  const { data } = await querySQL<{ visits: number }>(
-    `SELECT uniq(session_id) AS visits FROM analytics_hits
-      WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`
-  )
-  const [{ visits }] = data
-  return visits
+  // const { data } = await querySQL<{ visits: number }>(
+  //   `SELECT uniq(session_id) AS visits FROM analytics_hits
+  //     WHERE timestamp >= (now() - interval 5 minute) FORMAT JSON`
+  // )
+  // const [{ visits }] = data
+  // return visits
 }
 
 function useCurrentVisitors() {

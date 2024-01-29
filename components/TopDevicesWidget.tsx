@@ -47,7 +47,7 @@ export function useTopDevices() {
 
 export default function TopDevicesWidget() {
   const { data, warning, status } = useTopDevices()
-
+  
   return (
     <Widget>
       <Widget.Title>Top Devices</Widget.Title>

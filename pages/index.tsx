@@ -8,11 +8,11 @@ import { useEffect } from 'react'
 const token =
   'p.eyJ1IjogIjJlNDUyMzlmLTliZDItNGE5YS1iMDkwLTJmNjMyY2EwODJkZiIsICJpZCI6ICJmNTI0NTliMi1hOGZiLTQ4ZTEtODNiYi1kMzMyMjgwM2JjMjEiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.NZPo51CYeFx7PLLEnGK6vIfN4z1SMnED4oyosvbRiMg'
 export default function DashboardPage() {
-  const namespace = 'tinybird'
+  const namespace = 'x'
   const domain = 'tinybird.co'
 
   useEffect(() => {
-    track({ namespace: 'x', token })
+    track({ namespace, token })
   }, [])
   return (
     <>

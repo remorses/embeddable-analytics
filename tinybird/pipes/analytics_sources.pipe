@@ -4,11 +4,6 @@ DESCRIPTION >
 
 SQL >
 
-    WITH (
-            SELECT domainWithoutWWW(href)
-            FROM analytics_hits
-            LIMIT 1
-        ) AS currenct_domain
     SELECT
         toDate(timestamp) AS date,
         device,
@@ -19,7 +14,7 @@ SQL >
         countState() AS hits,
         namespace
     FROM analytics_hits
-    WHERE domainWithoutWWW(referrer) != currenct_domain
+    # WHERE domainWithoutWWW(referrer) != currenct_domain
     GROUP BY
         date,
         device,

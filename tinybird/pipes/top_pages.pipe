@@ -30,6 +30,7 @@ SQL >
           {% else %}
             and date <= today()
           {% end %}
+          and namespace = {{String(namespace, required=True)}}
         group by
           pathname
         order by

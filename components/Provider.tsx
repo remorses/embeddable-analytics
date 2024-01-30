@@ -5,6 +5,7 @@ import { QueryError } from '../lib/types'
 type IAnalyticsContext = {
   error: QueryError | null
   setError: (error: QueryError | null) => void
+  isDark: boolean
   domain: string
 }
 
@@ -12,9 +13,12 @@ const AnalyticsContext = createContext<IAnalyticsContext>(
   {} as IAnalyticsContext
 )
 
-export default function AnalyticsProvider({ children, domain }) {
+export default function AnalyticsProvider({
+  children,
+  value: { domain, isDark },
+}) {
   const [error, setError] = useState<QueryError | null>(null)
-  const value = useMemo(() => ({ error, setError, domain }), [error, domain])
+  const value = { error, setError, domain, isDark }
 
   return (
     <SWRConfig

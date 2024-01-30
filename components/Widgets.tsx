@@ -1,4 +1,7 @@
 import dynamic, { LoaderComponent } from 'next/dynamic'
+import createGlobe from 'cobe'
+import { useSpring } from 'react-spring'
+
 import InView from './InView'
 import Widget from './Widget'
 import { globalState } from '../lib/utils'
@@ -10,6 +13,9 @@ import TopLocationsWidget from './TopLocationsWidget'
 import TopPagesWidget from './TopPagesWidget'
 import TopSourcesWidget from './TopSourcesWidget'
 
+import { useRef, useEffect, useState } from 'react'
+import GlobeWidget from './GlobeWidget'
+
 enum WidgetHeight {
   XLarge = 588,
   Large = 442,
@@ -19,6 +25,7 @@ enum WidgetHeight {
 
 export default function Widgets({
   domain,
+  isDark,
   apiEndpoint = '/api/analytics',
   namespace,
 }) {
@@ -27,13 +34,22 @@ export default function Widgets({
     namespace,
   })
   return (
-    <AnalyticsProvider domain={domain}>
+    <AnalyticsProvider value={{ domain, isDark }}>
       <div className="space-y-6 sm:space-y-10">
         <Header />
 
         <div className="grid grid-cols-2 gap-6 sm:gap-10 ">
-          <div className="col-span-2" style={{ minHeight: WidgetHeight.Large }}>
+          <div
+            className="flex flex-col col-span-2"
+            style={{ minHeight: WidgetHeight.Large }}
+          >
             <KPIsWidget />
+          </div>
+          <div
+            className="flex flex-col col-span-2"
+            style={{ minHeight: WidgetHeight.Large }}
+          >
+            <GlobeWidget />
           </div>
           <InView height={WidgetHeight.Large}>
             <TopPagesWidget />

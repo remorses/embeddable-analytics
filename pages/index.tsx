@@ -10,12 +10,12 @@ const token =
 export default function DashboardPage() {
   const namespace = 'x'
   const domain = 'tinybird.co'
-  const [dark, setDark] = useState(false)
+  const [isDark, setDark] = useState(true)
   useEffect(() => {
     track({ namespace, token })
   }, [])
   return (
-    <div className={dark ? 'dark' : ''}>
+    <div className={isDark ? 'dark' : ''}>
       <Meta />
 
       <div className=" dark:bg-gray-900 min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 text-secondary dark:text-gray-200 ">
@@ -25,13 +25,13 @@ export default function DashboardPage() {
               <div className="grow"></div>
               <div className="">
                 <button onClick={() => setDark(x => !x)} className="">
-                  {dark ? 'light' : 'dark'}
+                  {isDark ? 'light' : 'dark'}
                 </button>
               </div>
             </div>
 
             <main>
-              <Widgets domain={domain} namespace={namespace} />
+              <Widgets domain={'x'} isDark={isDark} namespace={namespace} />
             </main>
           </div>
         </div>

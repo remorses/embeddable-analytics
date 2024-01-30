@@ -1,15 +1,21 @@
 import { Card, Title } from '@tremor/react'
+import clsx from 'clsx'
 import { ReactNode } from 'react'
 import { QueryStatus } from '../lib/types'
 import { cx } from '../lib/utils'
 import Loader from './Loader'
 
-type WidgetProps = {
-  children?: ReactNode
-}
-
-function Widget({ children }: WidgetProps) {
-  return <div className="rounded-lg border dark:border-gray-600 p-6 px-6 flex flex-col grow">{children}</div>
+function Widget({ className = '', children }) {
+  return (
+    <div
+      className={clsx(
+        'rounded-lg relative shrink-0 border dark:border-gray-600 p-6 px-6 flex flex-col grow',
+        className
+      )}
+    >
+      {children}
+    </div>
+  )
 }
 
 type WidgetTitleProps = {
@@ -63,7 +69,7 @@ function WidgetContent({
   noData,
 }: WidgetContentProps) {
   return (
-    <div className={cx(className, 'mt-4 flex flex-col grow')}>
+    <div className={cx(className, 'mt-4 flex shrink-0 flex-col grow')}>
       {status === 'loading' ? (
         <WidgetLoading loaderSize={loaderSize} />
       ) : status === 'error' ? (

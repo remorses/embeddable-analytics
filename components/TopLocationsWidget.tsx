@@ -87,7 +87,7 @@ export default function TopLocationsWidget() {
 
   return (
     <Widget>
-      <Widget.Title>Top Pages</Widget.Title>
+      <Widget.Title>Top Countries</Widget.Title>
       <Widget.Content
         status={status}
         noData={!data?.data?.length}

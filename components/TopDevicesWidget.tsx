@@ -1,52 +1,12 @@
 import { DonutChart } from '@tremor/react'
 import { Fragment } from 'react'
 
-import {
-  browsers,
-  devices,
-  formatNumber,
-  getPipeFromClient,
-} from '../lib/utils'
+import { devices, formatNumber, getPipeFromClient } from '../lib/utils'
 import { tremorPieChartColors } from '../styles/theme/tremor-colors'
 import Widget from './Widget'
 
 import { useDateFilter, useQuery } from '../lib/hooks'
-import {
-  TopBrowsers,
-  TopBrowsersData,
-  TopDevices,
-  TopDevicesData,
-} from '../lib/types'
-
-async function getTopDevices({
-  date_from,
-  date_to,
-}: {
-  date_from?: string
-  date_to?: string
-}): Promise<TopDevices> {
-  const { data: queryData } = await getPipeFromClient<TopDevicesData>(
-    'top_devices',
-    {
-      date_from,
-      date_to,
-      limit: 4,
-    }
-  )
-  const data = [...queryData]
-    .sort((a, b) => b.visits - a.visits)
-    .map(({ device, visits }) => ({
-      device: devices[device] ?? device,
-      visits,
-    }))
-
-  return { data }
-}
-
-export function useTopDevices() {
-  const { date_from: date_from, date_to: date_to } = useDateFilter()
-  return useQuery({ date_from, date_to, key: 'topDevices' }, getTopDevices)
-}
+import { TopDevices, TopDevicesData } from '../lib/types'
 
 export default function TopDevicesWidget() {
   const { data, warning, status } = useTopDevices()
@@ -98,4 +58,34 @@ export default function TopDevicesWidget() {
       </Widget.Content>
     </Widget>
   )
+}
+
+async function getTopDevices({
+  date_from,
+  date_to,
+}: {
+  date_from?: string
+  date_to?: string
+}): Promise<TopDevices> {
+  const { data: queryData } = await getPipeFromClient<TopDevicesData>(
+    'top_devices',
+    {
+      date_from,
+      date_to,
+      limit: 4,
+    }
+  )
+  const data = [...queryData]
+    .sort((a, b) => b.visits - a.visits)
+    .map(({ device, visits }) => ({
+      device: devices[device] ?? device,
+      visits,
+    }))
+
+  return { data }
+}
+
+export function useTopDevices() {
+  const { date_from: date_from, date_to: date_to } = useDateFilter()
+  return useQuery({ date_from, date_to, key: 'topDevices' }, getTopDevices)
 }

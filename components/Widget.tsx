@@ -9,11 +9,7 @@ type WidgetProps = {
 }
 
 function Widget({ children }: WidgetProps) {
-  return (
-    <section role="region" className="h-full">
-      <Card className="h-full">{children}</Card>
-    </section>
-  )
+  return <Card className="h-full">{children}</Card>
 }
 
 type WidgetTitleProps = {

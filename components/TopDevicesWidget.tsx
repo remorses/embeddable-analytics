@@ -32,14 +32,7 @@ export default function TopDevicesWidget() {
           </div>
           <div
             className={cx(
-              'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5'
-            )}
-          >
-            Visits
-          </div>
-          <div
-            className={cx(
-              'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5'
+              'col-span-2 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5'
             )}
           >
             Pageviews
@@ -48,7 +41,7 @@ export default function TopDevicesWidget() {
           <div className="col-span-3">
             <BarList data={chartData} valueFormatter={(_: any) => ''} />
           </div>
-          <div className="flex flex-col col-span-1 row-span-4 gap-2">
+          <div className="flex flex-col col-span-2 row-span-4 gap-2">
             {(data?.data ?? []).map(({ device, visits }) => (
               <div
                 key={device}

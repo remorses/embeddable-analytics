@@ -9,7 +9,7 @@ type WidgetProps = {
 }
 
 function Widget({ children }: WidgetProps) {
-  return <Card className="h-full">{children}</Card>
+  return <div className="rounded-md border p-6 px-8 flex flex-col grow">{children}</div>
 }
 
 type WidgetTitleProps = {
@@ -63,7 +63,7 @@ function WidgetContent({
   noData,
 }: WidgetContentProps) {
   return (
-    <div className={cx(className, 'mt-4 h-full')}>
+    <div className={cx(className, 'mt-4 flex flex-col grow')}>
       {status === 'loading' ? (
         <WidgetLoading loaderSize={loaderSize} />
       ) : status === 'error' ? (

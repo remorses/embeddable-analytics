@@ -9,7 +9,7 @@ type InViewProps = {
 export default function InView({ children, height }: InViewProps) {
   const [ref, inView] = useInView({ threshold: 0, triggerOnce: true })
   return (
-    <div ref={ref} style={{ height }}>
+    <div ref={ref} className='flex flex-col grow' style={{ height }}>
       {inView && children}
     </div>
   )

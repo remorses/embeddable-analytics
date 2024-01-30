@@ -1,16 +1,23 @@
-import { DonutChart } from '@tremor/react'
-import { Fragment } from 'react'
+import { BarList, DonutChart } from '@tremor/react'
+import { Fragment, useMemo } from 'react'
 
-import { devices, formatNumber, getPipeFromClient } from '../lib/utils'
+import { cx, devices, formatNumber, getPipeFromClient } from '../lib/utils'
 import { tremorPieChartColors } from '../styles/theme/tremor-colors'
 import Widget from './Widget'
 
 import { useDateFilter, useQuery } from '../lib/hooks'
-import { TopDevices, TopDevicesData } from '../lib/types'
+import { TopDevices, TopDevicesData, TopLocationsSorting } from '../lib/types'
 
 export default function TopDevicesWidget() {
   const { data, warning, status } = useTopDevices()
-
+  const chartData = useMemo(
+    () =>
+      (data?.data ?? []).map(d => ({
+        name: d.device,
+        value: d.visits,
+      })),
+    [data?.data]
+  )
   return (
     <Widget>
       <Widget.Title>Top Devices</Widget.Title>
@@ -19,40 +26,37 @@ export default function TopDevicesWidget() {
         noData={!data?.data?.length}
         warning={warning?.message}
       >
-        <div className="w-full h-full grid grid-cols-2">
-          <DonutChart
-            data={data?.data ?? []}
-            category="visits"
-            index="device"
-            colors={tremorPieChartColors.map(([color]) => color)}
-            showLabel={false}
-            valueFormatter={formatNumber}
-          />
-          <div className="justify-self-end">
-            <div className="grid grid-cols-2 gap-y-1 gap-4">
-              <div className="text-xs tracking-widest font-medium uppercase text-center truncate">
-                Device
+        <div className="grid grid-cols-5 gap-x-4 gap-y-2">
+          <div className="col-span-3 text-xs font-semibold tracking-widest text-gray-500 uppercase h-5">
+            Country
+          </div>
+          <div
+            className={cx(
+              'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5'
+            )}
+          >
+            Visits
+          </div>
+          <div
+            className={cx(
+              'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5'
+            )}
+          >
+            Pageviews
+          </div>
+
+          <div className="col-span-3">
+            <BarList data={chartData} valueFormatter={(_: any) => ''} />
+          </div>
+          <div className="flex flex-col col-span-1 row-span-4 gap-2">
+            {(data?.data ?? []).map(({ device, visits }) => (
+              <div
+                key={device}
+                className="flex items-center justify-end w-full text-neutral-64 h-9"
+              >
+                {visits}
               </div>
-              <div className="text-xs tracking-widest font-medium uppercase text-right truncate">
-                Visitors
-              </div>
-              {(data?.data ?? []).map(({ device, visits }, index) => (
-                <Fragment key={device}>
-                  <div className="flex items-center gap-2 text-sm leading-5 text-neutral-64 h-9 px-4 py-2 rounded-md z-10">
-                    <div
-                      className="h-4 min-w-[1rem]"
-                      style={{
-                        backgroundColor: tremorPieChartColors[index][1],
-                      }}
-                    />
-                    <span>{device}</span>
-                  </div>
-                  <div className="flex items-center justify-end text-neutral-64 h-9">
-                    {formatNumber(visits)}
-                  </div>
-                </Fragment>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </Widget.Content>

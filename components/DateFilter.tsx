@@ -39,17 +39,6 @@ export default function DateFilter() {
   // console.log({ dateRangePickerValue })
   return (
     <div className="flex items-center gap-4">
-      <Popover className="relative h-4">
-        <Popover.Button>
-          <QuestionIcon className="text-secondaryLight" />
-          <div className="sr-only">What is the time zone used?</div>
-        </Popover.Button>
-
-        <Popover.Panel className="absolute bottom-6 -right-10 bg-secondary text-white text-xs font-light rounded py-1 px-2 z-[2] w-24">
-          UTC timezone
-        </Popover.Panel>
-      </Popover>
-
       <div className="min-w-[165px]">
         <DateRangePicker
           value={dateRangePickerValue}

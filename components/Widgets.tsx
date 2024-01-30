@@ -31,8 +31,8 @@ export default function Widgets({
       <div className="space-y-6 sm:space-y-10">
         <Header />
 
-        <div className="grid grid-cols-2 gap-5 sm:gap-10 ">
-          <div className="col-span-2" style={{ height: WidgetHeight.XLarge }}>
+        <div className="grid grid-cols-2 gap-6 sm:gap-10 ">
+          <div className="col-span-2" style={{ minHeight: WidgetHeight.Large }}>
             <KPIsWidget />
           </div>
           <InView height={WidgetHeight.Large}>
@@ -44,7 +44,7 @@ export default function Widgets({
           <InView height={WidgetHeight.Large}>
             <TopSourcesWidget />
           </InView>
-          <InView height={WidgetHeight.Medium}>
+          <InView height={WidgetHeight.Large}>
             <TopDevicesWidget />
           </InView>
         </div>

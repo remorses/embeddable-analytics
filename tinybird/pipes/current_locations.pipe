@@ -1,0 +1,30 @@
+DESCRIPTION >
+	Top visting Countries ordered by most visits.
+    Accepts `date_from` and `date_to` date filter. Defaults to last 7 days.
+    Also `skip` and `limit` parameters for pagination.
+
+
+TOKEN "dashboard" READ
+
+NODE endpoint
+DESCRIPTION >
+    Group by pagepath and calcualte hits and visits
+
+SQL >
+
+    %
+        select
+          location,
+          countDistinct(session_id) AS visits
+        from
+          analytics_hits
+        where
+          timestamp >= (now() - interval 5 minute) 
+          and namespace = {{String(namespace, required=True)}}
+        group by
+          location
+        order by
+          visits desc
+        
+
+

@@ -1,5 +1,5 @@
 import createGlobe, { Marker } from 'cobe'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import { useSpring } from 'react-spring'
 import colors from 'tailwindcss/colors'
 import { useAnalytics } from './Provider'
@@ -13,7 +13,7 @@ import {
   TopLocationsData,
   TopLocationsSorting,
 } from '../lib/types'
-import { getPipeFromClient } from '../lib/utils'
+import { formatDateTimeForClickHouse, getPipeFromClient } from '../lib/utils'
 
 type Color = [number, number, number]
 
@@ -29,38 +29,34 @@ const countriesCodeToCoordinates = countriesCoordinates.reduce((acc, x) => {
   return acc
 }, {} as Record<string, [number, number]>)
 
-console.log(countriesCodeToCoordinates)
+// console.log(countriesCodeToCoordinates)
 
-const locationToAngles = (code): [number, number] => {
+const locationToCoordinates = (code): [number, number] => {
   const arr = countriesCodeToCoordinates[code]
   if (!arr) {
     return [0, 0]
   }
   return arr
-  //   const [long, lat] = arr
-  //   return [
-  //     Math.PI - ((long * Math.PI) / 180 - Math.PI / 2),
-  //     (lat * Math.PI) / 180,
-  //   ] as const
 }
 
-async function getTopLocations({
-  date_from,
-  date_to,
-}: {
-  date_from?: string
-  date_to?: string
-}) {
-  const { data: queryData } = await getPipeFromClient<TopLocationsData>(
-    'top_locations',
-    { limit: 8, date_from, date_to }
-  )
+function getAngleFromLocation(arr: [number, number]) {
+  const [long, lat] = arr
+  return [
+    Math.PI - ((long * Math.PI) / 180 - Math.PI / 2),
+    (lat * Math.PI) / 180,
+  ] as const
+}
 
+async function getTopLocations({}) {
+  const { data: queryData, meta } = await getPipeFromClient<{
+    visits: number
+    location: string
+  }>('current_locations', { limit: 100 })
+//   console.log(queryData[0])
   const data = [...queryData]
     // .sort((a, b) => b[sorting] - a[sorting])
     .map(({ location: code, visits }) => {
-      const unknownLocation = '🌎  Unknown'
-      const location = locationToAngles(code)
+      const location = locationToCoordinates(code)
       return {
         location,
         visits,
@@ -79,7 +75,7 @@ function mapVisitorsToMarkSize(visitors: number) {
   // min i 0.04
   // grow like log so big values don't get too big
   const max = 0.2
-  const min = 0.04
+  const min = 0.06
   const log = Math.log10(visitors)
   const size = log / 10
   return Math.max(min, Math.min(max, size))
@@ -87,13 +83,29 @@ function mapVisitorsToMarkSize(visitors: number) {
 
 export default function GlobeWidget() {
   const canvasRef = useRef<any>()
-  const { date_from, date_to } = useDateFilter()
 
-  const { data } = useQuery(
-    { date_from, date_to, key: 'topLocations' },
+  const { data, warning, error } = useQuery(
+    { key: 'current_locations' },
     getTopLocations
   )
+  //   console.log({ data, warning, error })
+  const allVisitors = useMemo(() => {
+    if (!data) {
+      return 0
+    }
+    return data.reduce((acc, x) => acc + x.visits, 0)
+  }, [data])
 
+  useEffect(() => {
+    const mostVisitorsCountry = data?.[0]?.location
+    if (!mostVisitorsCountry) {
+      return
+    }
+    const [phi] = getAngleFromLocation(mostVisitorsCountry)
+    api.start({
+      r: phi,
+    })
+  }, [data])
   const pointerInteracting = useRef<number | null>(null)
   const pointerInteractionMovement = useRef(0)
   let { isDark } = useAnalytics()
@@ -103,7 +115,7 @@ export default function GlobeWidget() {
     ? getColor(colors.blue[300])
     : getColor(colors.blue[50])
   const markerColor: Color = isDark
-    ? getColor(colors.blue[300])
+    ? getColor(colors.red[400])
     : getColor(colors.blue[500])
   const [{ r }, api] = useSpring(() => ({
     r: 0,
@@ -136,7 +148,7 @@ export default function GlobeWidget() {
       theta: 0.3,
       dark,
       diffuse: 1,
-      mapSamples: 16000,
+      mapSamples: 30000,
       mapBrightness: 2,
       baseColor,
 
@@ -176,7 +188,7 @@ export default function GlobeWidget() {
       <div className="absolute p-8 inset-0 flex flex-col">
         <div className="self-end">
           <div className="text-2xl font-medium truncate capitalize">
-            9 Current Visitors
+            {allVisitors} Current Visitors
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ const token = `p.eyJ1IjogIjJlNDUyMzlmLTliZDItNGE5YS1iMDkwLTJmNjMyY2EwODJkZiIsICJ
 
 export default async function route(req: NextRequest) {
   const json = await req.json()
-  console.log(json)
+  // console.log(json)
   const namespace: string = json.namespace
   // do auth here
   const data = await getData({ ...json, token, namespace })

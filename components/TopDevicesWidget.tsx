@@ -35,7 +35,7 @@ export default function TopDevicesWidget() {
               'col-span-2 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5'
             )}
           >
-            Pageviews
+            Visitors
           </div>
 
           <div className="col-span-3">

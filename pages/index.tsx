@@ -3,24 +3,32 @@ import Script from 'next/script'
 import Meta from '../components/Meta'
 import Widgets from '../components/Widgets'
 import { track } from '../tracker'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const token =
   'p.eyJ1IjogIjJlNDUyMzlmLTliZDItNGE5YS1iMDkwLTJmNjMyY2EwODJkZiIsICJpZCI6ICJmNTI0NTliMi1hOGZiLTQ4ZTEtODNiYi1kMzMyMjgwM2JjMjEiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.NZPo51CYeFx7PLLEnGK6vIfN4z1SMnED4oyosvbRiMg'
 export default function DashboardPage() {
   const namespace = 'x'
   const domain = 'tinybird.co'
-
+  const [dark, setDark] = useState(false)
   useEffect(() => {
     track({ namespace, token })
   }, [])
   return (
-    <>
+    <div className={dark ? 'dark' : ''}>
       <Meta />
-      <div className=" dark:bg-gray-800 min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 text-secondary dark:text-gray-200 ">
-        <div className="max-w-7xl mx-auto">
+
+      <div className=" dark:bg-gray-900 min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 text-secondary dark:text-gray-200 ">
+        <div className="max-w-6xl mx-auto">
           <div className="space-y-6 sm:space-y-10">
-            <img src="/icon.png" alt="" width={24} height={24} />
+            <div className="flex ">
+              <div className="grow"></div>
+              <div className="">
+                <button onClick={() => setDark(x => !x)} className="">
+                  {dark ? 'light' : 'dark'}
+                </button>
+              </div>
+            </div>
 
             <main>
               <Widgets domain={domain} namespace={namespace} />
@@ -28,6 +36,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

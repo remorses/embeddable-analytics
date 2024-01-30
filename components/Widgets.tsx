@@ -10,9 +10,9 @@ import TopLocationsWidget from './TopLocationsWidget'
 import TopPagesWidget from './TopPagesWidget'
 import TopSourcesWidget from './TopSourcesWidget'
 
-const enum WidgetHeight {
+enum WidgetHeight {
   XLarge = 588,
-  Large = 472,
+  Large = 442,
   Medium = 344,
   Small = 216,
 }

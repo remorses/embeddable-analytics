@@ -9,7 +9,7 @@ type WidgetProps = {
 }
 
 function Widget({ children }: WidgetProps) {
-  return <div className="rounded-md border p-6 px-8 flex flex-col grow">{children}</div>
+  return <div className="rounded-md border dark:border-gray-600 p-6 px-8 flex flex-col grow">{children}</div>
 }
 
 type WidgetTitleProps = {

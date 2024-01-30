@@ -1,8 +1,9 @@
 const { fontFamily } = require('tailwindcss/defaultTheme')
 const { colorsTinybird, typography } = require('./styles/theme')
 
-/** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
   content: [
@@ -49,6 +50,35 @@ module.exports = {
             emphasis: '#374151', // gray-700
             strong: '#111827', // gray-900
             inverted: '#ffffff', // white
+          },
+        },
+        'dark-tremor': {
+          brand: {
+            faint: '#0B1229',
+            muted: colors.blue[950],
+            subtle: colors.blue[800],
+            DEFAULT: colors.blue[500],
+            emphasis: colors.blue[400],
+            inverted: colors.blue[950],
+          },
+          background: {
+            muted: '#131A2B',
+            subtle: colors.gray[800],
+            DEFAULT: colors.gray[900],
+            emphasis: colors.gray[300],
+          },
+          border: {
+            DEFAULT: colors.gray[700],
+          },
+          ring: {
+            DEFAULT: colors.gray[800],
+          },
+          content: {
+            subtle: colors.gray[600],
+            DEFAULT: colors.gray[500],
+            emphasis: colors.gray[200],
+            strong: colors.gray[50],
+            inverted: colors.gray[950],
           },
         },
       },

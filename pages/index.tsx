@@ -17,7 +17,7 @@ export default function DashboardPage() {
   return (
     <>
       <Meta />
-      <div className="bg-body min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 text-secondary">
+      <div className=" dark:bg-gray-800 min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 text-secondary dark:text-gray-200 ">
         <div className="max-w-7xl mx-auto">
           <div className="space-y-6 sm:space-y-10">
             <img src="/icon.png" alt="" width={24} height={24} />

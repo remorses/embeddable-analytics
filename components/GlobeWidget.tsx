@@ -118,6 +118,8 @@ export default function GlobeWidget() {
 
   const factor = 3
   useEffect(() => {
+    let phi = 0
+
     let height = 0
     let width = 0
     const onResize = () => {
@@ -155,7 +157,8 @@ export default function GlobeWidget() {
           return marker
         }) || [],
       onRender: state => {
-        state.phi = r.get()
+        state.phi = phi
+        phi += 0.0005
         state.width = height * factor
         state.height = height * factor
         // state.glowColor = glowColor

@@ -1,22 +1,22 @@
-import Widget from './Widget'
-import KPIsTabs from './KpisTabs'
-import { useDateFilter, useQuery } from '../lib/hooks'
-import { BarChart } from '@tremor/react'
-import { useMemo } from 'react'
-
-import { useRouter } from 'next/router'
-
 import {
-  KpiTotals,
-  KpisData,
-  KpiType,
-  QueryError,
   ChartValue,
-  isKpi,
   KPI_OPTIONS,
+  KpiTotals,
+  KpiType,
+  KpisData,
+  QueryError,
+  isKpi,
 } from '../lib/types'
-import { getPipeFromClient } from '../lib/utils'
+import { useDateFilter, useQuery } from '../lib/hooks'
+
+import { BarChart } from '@tremor/react'
+import KPIsTabs from './KpisTabs'
+import Widget from './Widget'
 import { format } from 'date-fns'
+import { getPipeFromClient } from '../lib/utils'
+import { useMemo } from 'react'
+import { useQueryState } from 'nuqs'
+import { useRouter } from 'next/router'
 
 export default function KPIsWidget() {
   const { data, kpi, setKpi, kpiOption, warning, status } = useKpis()
@@ -190,21 +190,12 @@ function useKpis() {
   const { date_from, date_to } = useDateFilter()
   const router = useRouter()
   const { kpi: kpiParam } = router.query
-  const kpi = isKpi(kpiParam) ? kpiParam : 'visits'
+  const [kpi, setKpi] = useQueryState<KpiType>('kpi', {
+    defaultValue: 'visits',
+    parse: x => x as any,
+  })
   const kpiOption = KPI_OPTIONS.find(({ value }) => value === kpi)!
   const query = useQuery({ kpi, date_from, date_to, key: 'kpis' }, getKpis)
-
-  const setKpi = (kpi: KpiType) => {
-    const searchParams = new URLSearchParams(window.location.search)
-    searchParams.set('kpi', kpi)
-    router.push(
-      {
-        query: searchParams.toString(),
-      },
-      undefined,
-      { scroll: false }
-    )
-  }
 
   return {
     setKpi,

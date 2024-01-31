@@ -2,7 +2,7 @@
 import Script from 'next/script'
 import Meta from '../components/Meta'
 import Widgets from '../components/Widgets'
-import { track } from '../tracker'
+import { track } from '../track'
 import { useEffect, useState } from 'react'
 
 const token =

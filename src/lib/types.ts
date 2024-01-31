@@ -5,7 +5,7 @@ import {
   formatNumber,
   formatPercentage,
   kFormatter,
-} from '../lib/utils'
+} from './utils'
 
 import { SWRResponse } from 'swr'
 

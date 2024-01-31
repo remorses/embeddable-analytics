@@ -31,7 +31,12 @@ export default function DashboardPage() {
             </div>
 
             <main>
-              <Widgets domain={'x'} isDark={isDark} namespace={namespace} />
+              <Widgets
+                apiEndpoint="/api/analytics/data"
+                domain={'x'}
+                isDark={isDark}
+                namespace={namespace}
+              />
             </main>
           </div>
         </div>

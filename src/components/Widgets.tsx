@@ -23,12 +23,7 @@ enum WidgetHeight {
   Small = 216,
 }
 
-export default function Widgets({
-  domain,
-  isDark,
-  apiEndpoint = '/api/analytics',
-  namespace,
-}) {
+export default function Widgets({ domain, isDark, apiEndpoint, namespace }) {
   Object.assign(globalState, {
     apiEndpoint,
     namespace,

@@ -3,7 +3,7 @@ import Widget from './Widget'
 
 import { browsers, formatNumber, getPipeFromClient } from '../lib/utils'
 import { DonutChart } from '@tremor/react'
-import { tremorPieChartColors } from '../styles/theme/tremor-colors'
+// import { tremorPieChartColors } from '../styles/theme/tremor-colors'
 
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { TopBrowsers, TopBrowsersData } from '../lib/types'
@@ -30,7 +30,7 @@ export default function BrowsersWidget() {
             data={data?.data ?? []}
             category="visits"
             index="browser"
-            colors={tremorPieChartColors.map(([color]) => color)}
+            // colors={tremorPieChartColors.map(([color]) => color)}
             showLabel={false}
             valueFormatter={formatNumber}
           />

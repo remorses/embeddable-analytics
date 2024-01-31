@@ -2,18 +2,18 @@
 import Script from 'next/script'
 import Meta from '../components/Meta'
 import Widgets from '../components/Widgets'
-import { track } from '../track'
+import { init } from '../track'
 import { useEffect, useState } from 'react'
 
 const token =
   'p.eyJ1IjogIjJlNDUyMzlmLTliZDItNGE5YS1iMDkwLTJmNjMyY2EwODJkZiIsICJpZCI6ICJmNTI0NTliMi1hOGZiLTQ4ZTEtODNiYi1kMzMyMjgwM2JjMjEiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.NZPo51CYeFx7PLLEnGK6vIfN4z1SMnED4oyosvbRiMg'
+const namespace = 'x'
+init({ token, namespace })
+
 export default function DashboardPage() {
-  const namespace = 'x'
   const domain = 'tinybird.co'
   const [isDark, setDark] = useState(true)
-  useEffect(() => {
-    track({ namespace, token })
-  }, [])
+
   return (
     <div className={isDark ? 'dark' : ''}>
       <Meta />

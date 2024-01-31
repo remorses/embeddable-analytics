@@ -75,10 +75,10 @@ export function Header() {
   return (
     <header className="flex justify-between flex-col lg:flex-row gap-6">
       <div className="flex gap-2 md:gap-10 justify-between md:justify-start">
-        <h1 className="flex items-center gap-2 min-w-max">
+        {/* <h1 className="flex items-center gap-2 min-w-max">
           <span className="text-lg leading-6">{domain}</span>
         </h1>
-        <CurrentVisitors />
+        <CurrentVisitors /> */}
       </div>
       <DateFilter />
     </header>

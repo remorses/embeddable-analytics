@@ -1,6 +1,8 @@
 import { timezones } from './lib/timezones'
 
-export let track: (name: string, payload: any) => void
+export let track: (name: string, payload: any) => void = () => {
+  throw new Error('analytics init() not called, not initialized')
+}
 
 let alreadyInit = false
 
@@ -12,6 +14,7 @@ export function init({
   eventsEndpoint = '',
   globalAttributes = {} as Record<string, any>,
 }) {
+  if (typeof window === 'undefined') return
   if (alreadyInit) return
   alreadyInit = true
 
@@ -33,7 +36,7 @@ export function init({
     }
 
     // payload = _maskSuspiciousAttributes(payload)
-    payload = Object.assign({}, JSON.parse(payload), globalAttributes)
+    payload = Object.assign({}, payload, globalAttributes)
     payload = JSON.stringify(payload)
 
     const request = new XMLHttpRequest()

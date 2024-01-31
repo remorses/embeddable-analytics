@@ -1,5 +1,5 @@
 const { fontFamily } = require('tailwindcss/defaultTheme')
-const { colorsTinybird, typography } = require('./styles/theme')
+const { colorsTinybird, typography } = require('./src/styles/theme')
 
 const colors = require('tailwindcss/colors')
 
@@ -7,18 +7,17 @@ const colors = require('tailwindcss/colors')
 module.exports = {
   darkMode: 'class',
   content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx}',
     './node_modules/@tremor/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     transparent: 'transparent',
     current: 'currentColor',
-    fontFamily: {
-      sans: [typography.fontFamily, ...fontFamily.sans],
-    },
+    // fontFamily: {
+    //   sans: [typography.fontFamily, ...fontFamily.sans],
+    // },
     extend: {
-      colorsTinybird,
+      // colorsTinybird,
       textColor: {
         base: '#25283D',
       },

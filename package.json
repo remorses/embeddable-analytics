@@ -23,6 +23,11 @@
     "react-spring": "^9.7.3",
     "swr": "^2.2.4"
   },
+  "peerDependencies": {
+    "react": "*",
+    "next": "*",
+    "react-dom": "*"
+  },
   "devDependencies": {
     "next": "14.0.4",
     "react": "18.2.0",

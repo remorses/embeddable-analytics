@@ -14,12 +14,7 @@ import createGlobe from 'cobe'
 import { globalState } from '../lib/utils'
 import { useSpring } from 'react-spring'
 
-enum WidgetHeight {
-  XLarge = 588,
-  Large = 442,
-  Medium = 344,
-  Small = 216,
-}
+const height = 440
 
 export default function Widgets({ domain, isDark, apiEndpoint, namespace }) {
   Object.assign(globalState, {
@@ -34,26 +29,26 @@ export default function Widgets({ domain, isDark, apiEndpoint, namespace }) {
         <div className="grid grid-cols-2 gap-6 sm:gap-10 ">
           <div
             className="flex flex-col col-span-2"
-            style={{ minHeight: WidgetHeight.Large }}
+            style={{ minHeight: height + 80 }}
           >
             <KPIsWidget />
           </div>
           <div
             className="flex flex-col col-span-2"
-            style={{ minHeight: WidgetHeight.Large }}
+            style={{ minHeight: height }}
           >
             <GlobeWidget />
           </div>
-          <InView height={WidgetHeight.Large}>
+          <InView height={height}>
             <TopPagesWidget />
           </InView>
-          {/* <InView height={WidgetHeight.Large}>
+          {/* <InView height={height}>
             <TopLocationsWidget />
           </InView> */}
-          <InView height={WidgetHeight.Large}>
+          <InView height={height}>
             <TopSourcesWidget />
           </InView>
-          <InView height={WidgetHeight.Large}>
+          <InView height={height}>
             <TopDevicesWidget />
           </InView>
         </div>

@@ -18,31 +18,34 @@ export function useDateFilter() {
   const [dateRangePickerValue, setDateRangePickerValue] =
     useState<DateRangePickerValue>()
 
-  const setDateFilter = useCallback(
-    ({ from, to, selectValue }: DateRangePickerValue) => {
-      const lastDays = selectValue ?? DateFilter.Custom
+  const setDateFilter = ({ from, to, selectValue }: DateRangePickerValue) => {
+    const lastDays = selectValue ?? DateFilter.Custom
 
-      const searchParams = new URLSearchParams(window.location.search)
-      searchParams.set('last_days', lastDays)
-
-      if (lastDays === DateFilter.Custom && from && to) {
-        searchParams.set('start_date', format(from, dateFormat))
-        searchParams.set('end_date', format(to, dateFormat))
-      } else {
-        searchParams.delete('start_date')
-        searchParams.delete('end_date')
-      }
-      router.push(
-        {
-          query: searchParams.toString(),
+    const searchParams = new URLSearchParams(window.location.search)
+    let last_days = lastDays
+    let start_date = router.query.start_date
+    let end_date = router.query.end_date
+    if (lastDays === DateFilter.Custom && from && to) {
+      start_date = format(from, dateFormat)
+      end_date = format(to, dateFormat)
+    } else {
+      start_date = undefined
+      end_date = undefined
+      searchParams.delete('end_date')
+    }
+    router.push(
+      {
+        query: {
+          ...router.query,
+          start_date,
+          end_date,
+          last_days,
         },
-        undefined,
-        { scroll: false }
-      )
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+      },
+      undefined,
+      { scroll: false }
+    )
+  }
 
   const lastDaysParam = router.query.last_days as DateFilter
   const lastDays: DateFilter =

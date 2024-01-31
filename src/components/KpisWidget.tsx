@@ -189,7 +189,7 @@ async function getKpis({
 function useKpis() {
   const { date_from, date_to } = useDateFilter()
   const router = useRouter()
-  const { kpi: kpiParam } = router.query
+
   const [kpi, setKpi] = useQueryState<KpiType>('kpi', {
     defaultValue: 'visits',
     parse: x => x as any,

@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react'
+
+import Meta from '../components/Meta'
 /* eslint-disable @next/next/no-img-element */
 import Script from 'next/script'
-import Meta from '../components/Meta'
 import Widgets from '../components/Widgets'
 import { init } from '../track'
-import { useEffect, useState } from 'react'
 
 const token =
   'p.eyJ1IjogIjJlNDUyMzlmLTliZDItNGE5YS1iMDkwLTJmNjMyY2EwODJkZiIsICJpZCI6ICJmNTI0NTliMi1hOGZiLTQ4ZTEtODNiYi1kMzMyMjgwM2JjMjEiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.NZPo51CYeFx7PLLEnGK6vIfN4z1SMnED4oyosvbRiMg'
@@ -32,7 +33,7 @@ export default function DashboardPage() {
 
             <main>
               <Widgets
-                apiEndpoint="/api/analytics/data"
+                apiEndpoint="/api/analytics-data"
                 domain={'x'}
                 isDark={isDark}
                 namespace={namespace}

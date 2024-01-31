@@ -1,106 +1,19 @@
-import { timezones } from "./lib/timezones"
+import { timezones } from './lib/timezones'
 
-export function track({ token, datasource = 'analytics_events', namespace }) {
-  const COOKIE_NAME = 'session-id'
+export let track: (name: string, payload: any) => void
 
-  let globalAttributes = {}
+let alreadyInit = false
 
-  if (document.currentScript) {
-    // host = document.currentScript.getAttribute('data-host')
-    // proxy = document.currentScript.getAttribute('data-proxy')
-    token ||= document.currentScript.getAttribute('data-token') || ''
-    // domain = document.currentScript.getAttribute('data-domain')
-    datasource =
-      document.currentScript.getAttribute('data-datasource') || datasource
-
-    for (const attr of document.currentScript.attributes) {
-      if (attr.name.startsWith('tb_')) {
-        globalAttributes[attr.name.slice(3)] = attr.value
-      }
-    }
-  }
-
-  /**
-   * Generate uuid to identify the session. Random, not data-derived
-   */
-  function _uuidv4() {
-    return (([1e7] as any) + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
-      (
-        c ^
-        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-      ).toString(16)
-    )
-  }
-
-  function _getSessionId() {
-    let cookie = {}
-    document.cookie.split(';').forEach(function (el) {
-      let [key, value] = el.split('=')
-      cookie[key.trim()] = value
-    })
-    return cookie[COOKIE_NAME]
-  }
-
-  /**
-   * Set session id
-   */
-  function _setSessionId() {
-    /**
-     * Try to keep same session id if session cookie exists, generate a new one otherwise.
-     *   - First request in a session will generate a new session id
-     *   - The next request will keep the same session id and extend the TTL for 30 more minutes
-     */
-    const sessionId = _getSessionId() || _uuidv4()
-    let cookieValue = `${COOKIE_NAME}=${sessionId}; Max-Age=1800; path=/; secure`
-
-    // if (domain) {
-    //   cookieValue += `; domain=${domain}`
-    // }
-
-    document.cookie = cookieValue
-  }
-
-  /**
-   * Try to mask PPI and potential sensible attributes
-   *
-   * @param  { object } payload Event payload
-   * @return { object } Sanitized payload
-   */
-  const _maskSuspiciousAttributes = payload => {
-    const attributesToMask = [
-      'username',
-      'user',
-      'user_id',
-      'userid',
-      'password',
-      'pass',
-      'pin',
-      'passcode',
-      'token',
-      'api_token',
-      'email',
-      'address',
-      'phone',
-      'sex',
-      'gender',
-      'order',
-      'order_id',
-      'orderid',
-      'payment',
-      'credit_card',
-    ]
-
-    // Deep copy
-    let _payload = JSON.stringify(payload)
-    attributesToMask.forEach(attr => {
-      _payload = _payload.replaceAll(
-        new RegExp(`("${attr}"):(".+?"|\\d+)`, 'mgi'),
-        '$1:"********"'
-      )
-    })
-
-    return _payload
-  }
+export function init({
+  token = '',
+  datasource = 'analytics_events',
+  cookieName = 'analytics-session-id',
+  namespace,
+  eventsEndpoint = '',
+  globalAttributes = {} as Record<string, any>,
+}) {
+  if (alreadyInit) return
+  alreadyInit = true
 
   /**
    * Send event to endpoint
@@ -110,21 +23,16 @@ export function track({ token, datasource = 'analytics_events', namespace }) {
    * @return { object } request response
    */
   async function _sendEvent(name, payload) {
-    _setSessionId()
+    _setSessionId({ cookieName })
     let url
 
-    // Use public Tinybird url if no custom endpoint is provided
-    // if (proxy) {
-    //   url = `${proxy}/api/tracking`
-    // } else if (host) {
-    //   host = host.replaceAll(/\/+$/gm, '')
-    //   url = `${host}/v0/events?name=${DATASOURCE}&token=${token}`
-    // } else {
+    if (eventsEndpoint) {
+      url = eventsEndpoint
+    } else {
+      url = `https://api.tinybird.co/v0/events?name=${datasource}&token=${token}`
+    }
 
-    // }
-    url = `https://api.tinybird.co/v0/events?name=${datasource}&token=${token}`
-
-    payload = _maskSuspiciousAttributes(payload)
+    // payload = _maskSuspiciousAttributes(payload)
     payload = Object.assign({}, JSON.parse(payload), globalAttributes)
     payload = JSON.stringify(payload)
 
@@ -136,12 +44,13 @@ export function track({ token, datasource = 'analytics_events', namespace }) {
         timestamp: new Date().toISOString(),
         action: name,
         version: '1',
-        session_id: _getSessionId(),
+        session_id: _getSessionId({ cookieName }),
         payload,
         namespace,
       })
     )
   }
+  track = _sendEvent
 
   /**
    * Track page hit
@@ -180,9 +89,6 @@ export function track({ token, datasource = 'analytics_events', namespace }) {
     }, 300)
   }
 
-  // Client
-  window['Tinybird'] = { trackEvent: _sendEvent }
-
   // Event listener
   window.addEventListener('hashchange', _trackPageHit)
   const his = window.history
@@ -207,4 +113,86 @@ export function track({ token, datasource = 'analytics_events', namespace }) {
   } else {
     _trackPageHit()
   }
+}
+
+/**
+ * Try to mask PPI and potential sensible attributes
+ *
+ * @param  { object } payload Event payload
+ * @return { object } Sanitized payload
+ */
+const _maskSuspiciousAttributes = payload => {
+  const attributesToMask = [
+    'username',
+    'user',
+    'user_id',
+    'userid',
+    'password',
+    'pass',
+    'pin',
+    'passcode',
+    'token',
+    'api_token',
+    'email',
+    'address',
+    'phone',
+    'sex',
+    'gender',
+    'order',
+    'order_id',
+    'orderid',
+    'payment',
+    'credit_card',
+  ]
+
+  // Deep copy
+  let _payload = JSON.stringify(payload)
+  attributesToMask.forEach(attr => {
+    _payload = _payload.replaceAll(
+      new RegExp(`("${attr}"):(".+?"|\\d+)`, 'mgi'),
+      '$1:"********"'
+    )
+  })
+
+  return _payload
+}
+
+/**
+ * Generate uuid to identify the session. Random, not data-derived
+ */
+function _uuidv4() {
+  return (([1e7] as any) + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+    (
+      c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+    ).toString(16)
+  )
+}
+
+/**
+ * Set session id
+ */
+function _setSessionId({ cookieName }) {
+  /**
+   * Try to keep same session id if session cookie exists, generate a new one otherwise.
+   *   - First request in a session will generate a new session id
+   *   - The next request will keep the same session id and extend the TTL for 30 more minutes
+   */
+  const sessionId = _getSessionId({ cookieName }) || _uuidv4()
+  let cookieValue = `${cookieName}=${sessionId}; Max-Age=1800; path=/; secure`
+
+  // if (domain) {
+  //   cookieValue += `; domain=${domain}`
+  // }
+
+  document.cookie = cookieValue
+}
+
+function _getSessionId({ cookieName }) {
+  let cookie = {}
+  document.cookie.split(';').forEach(function (el) {
+    let [key, value] = el.split('=')
+    cookie[key.trim()] = value
+  })
+  return cookie[cookieName]
 }

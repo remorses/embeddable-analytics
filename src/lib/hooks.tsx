@@ -1,8 +1,5 @@
-import { DateRangePickerValue } from '@tremor/react'
-
+import { DateFilter, QueryError, QueryResponse, dateFormat } from './types'
 import { format, subDays } from 'date-fns'
-
-import { useRouter } from 'next/router'
 import {
   useCallback,
   useEffect,
@@ -12,7 +9,9 @@ import {
   useState,
 } from 'react'
 import useSWR, { Fetcher, Key } from 'swr'
-import { DateFilter, QueryError, QueryResponse, dateFormat } from './types'
+
+import { DateRangePickerValue } from '@tremor/react'
+import { useRouter } from 'next/router'
 
 export function useDateFilter() {
   const router = useRouter()
@@ -171,6 +170,7 @@ export function useQuery<T, K extends Key>(
 
   const handleError = (error: QueryError) => {
     config?.onError?.(error)
+    console.error('useQuery error', error)
     if (error.status !== 404 && error.status !== 400) return
     setWarning(error)
   }

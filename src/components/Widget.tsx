@@ -1,9 +1,10 @@
 import { Card, Title } from '@tremor/react'
-import clsx from 'clsx'
-import { ReactNode } from 'react'
-import { QueryStatus } from '../lib/types'
-import { cx } from '../lib/utils'
+
 import Loader from './Loader'
+import { QueryStatus } from '../lib/types'
+import { ReactNode } from 'react'
+import clsx from 'clsx'
+import { cx } from '../lib/utils'
 
 function Widget({ className = '', children }) {
   return (
@@ -85,7 +86,7 @@ function WidgetContent({
 
 function WidgetWarning({ children }: { children: ReactNode }) {
   return (
-    <div className="absolute bottom-0 inset-x-0 p-8 flex items-start gap-2 justify-center bg-warning">
+    <div className="absolute bottom-0 inset-x-0 p-8 flex items-center gap-2 justify-center bg-warning">
       <div>
         <svg
           width="16"
@@ -98,7 +99,7 @@ function WidgetWarning({ children }: { children: ReactNode }) {
         </svg>
       </div>
       <div className="space-y-2">
-        <h3 className="text-secondary font-semibold">{children}</h3>
+        <h3 className=" font-semibold">{children}</h3>
         <div className="text-neutral-64 text-sm">
           <p>
             {`Check that the original datasource columns and pipe names match the ones from the original data project `}
@@ -117,7 +118,7 @@ function WidgetWarning({ children }: { children: ReactNode }) {
 
 function WidgetNoData() {
   return (
-    <div className="absolute inset-0 place-content-center grid text-neutral-64">
+    <div className="grow flex flex-col justify-center items-center">
       No data
     </div>
   )

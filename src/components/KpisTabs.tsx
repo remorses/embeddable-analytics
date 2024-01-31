@@ -1,4 +1,4 @@
-import { KpiTotals, KpiType, KPI_OPTIONS } from '../lib/types'
+import { KPI_OPTIONS, KpiTotals, KpiType } from '../lib/types'
 
 type KpisTabsProps = {
   value: KpiType
@@ -22,7 +22,7 @@ export default function KpisTabs({
           role="tab"
           aria-selected={selectedKpi === value}
           data-state={value === selectedKpi ? 'active' : undefined}
-          className="relative cursor-pointer p-6 md:p-9 text-left md:text-center text-secondary dark:hover:bg-dark-tremor-brand hover:bg-tremor-brand-muted transition-colors sm:data-[state=active]:border-b-4 sm:data-[state=active]:border-blue-500 data-[state=active]:text-primary sm:mb-2"
+          className="relative cursor-pointer p-6 md:p-9 text-left md:text-center dark:hover:bg-dark-tremor-brand hover:bg-tremor-brand-muted transition-colors sm:data-[state=active]:border-b-4 sm:data-[state=active]:border-blue-500 data-[state=active]:text-primary sm:mb-2"
           onClick={() => onChange(value)}
         >
           <div className="flex flex-col gap-2 w-fit md:mx-auto">

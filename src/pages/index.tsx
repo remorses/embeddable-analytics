@@ -19,7 +19,7 @@ export default function DashboardPage() {
     <div className={isDark ? 'dark' : ''}>
       <Meta />
 
-      <div className=" dark:bg-gray-900 min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 text-secondary dark:text-gray-200 ">
+      <div className=" dark:bg-gray-900 min-h-screen py-5 px-5 sm:px-10 text-sm leading-5 dark:text-gray-200 ">
         <div className="max-w-6xl mx-auto">
           <div className="space-y-6 sm:space-y-10">
             <div className="flex ">

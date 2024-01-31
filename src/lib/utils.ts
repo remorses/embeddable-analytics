@@ -76,7 +76,6 @@ export async function getPipeFromClient<T>(
     )
   }
   const json = await res.json()
-  // console.log('pipe', pipe, json)
   return json
 }
 

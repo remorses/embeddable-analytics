@@ -54,9 +54,9 @@ export default function Widgets({
           <InView height={WidgetHeight.Large}>
             <TopPagesWidget />
           </InView>
-          <InView height={WidgetHeight.Large}>
+          {/* <InView height={WidgetHeight.Large}>
             <TopLocationsWidget />
-          </InView>
+          </InView> */}
           <InView height={WidgetHeight.Large}>
             <TopSourcesWidget />
           </InView>

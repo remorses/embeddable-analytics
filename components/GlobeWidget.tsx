@@ -6,15 +6,20 @@ import { useAnalytics } from './Provider'
 import Widget from './Widget'
 import { colord } from 'colord'
 import { countriesCoordinates } from '../lib/countries'
-import { useParams } from 'next/navigation'
-import { useDateFilter, useQuery } from '../lib/hooks'
+
+import { useDateFilter, useParams, useQuery } from '../lib/hooks'
 import {
   TopLocation,
   TopLocationsData,
   TopLocationsSorting,
 } from '../lib/types'
-import { formatDateTimeForClickHouse, getPipeFromClient } from '../lib/utils'
-import { List, ListItem, Title } from '@tremor/react'
+import {
+  cx,
+  formatDateTimeForClickHouse,
+  getPipeFromClient,
+} from '../lib/utils'
+import { BarList, List, ListItem, Title } from '@tremor/react'
+import TopLocationsWidget from './TopLocationsWidget'
 
 type Color = [number, number, number]
 
@@ -48,7 +53,7 @@ function getAngleFromLocation(arr: [number, number]) {
   ] as const
 }
 
-async function getTopLocations({}) {
+async function getCurrentLocations({}) {
   const { data: queryData, meta } = await getPipeFromClient<{
     visits: number
     location: string
@@ -88,16 +93,37 @@ const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
 export default function GlobeWidget() {
   const canvasRef = useRef<any>()
 
-  const { data, warning, error } = useQuery(
-    { key: 'current_locations' },
-    getTopLocations
+  const { data, status, warning } = useTopLocations()
+  const [sorting, setSorting] = useParams({
+    key: 'top_locations_sorting',
+    values: Object.values(TopLocationsSorting),
+  })
+  const chartData = useMemo(
+    () =>
+      (data ?? []).map(d => ({
+        name: (
+          <button
+            onClick={() => {
+              const [phi] = getAngleFromLocation(d.coords)
+              api.start({
+                r: phi,
+              })
+            }}
+          >
+            {d.location}
+          </button>
+        ) as any,
+
+        value: d[sorting],
+      })),
+    [data, sorting]
   )
   //   console.log({ data, warning, error })
   const allVisitors = useMemo(() => {
     if (!data) {
       return 0
     }
-    return data.reduce((acc, x) => acc + x.visits, 0)
+    return data?.reduce((acc, x) => acc + x.visits, 0)
   }, [data])
 
   useEffect(() => {
@@ -105,8 +131,10 @@ export default function GlobeWidget() {
     if (!mostVisitorsCountry) {
       return
     }
-    console.log(`focusing on most visited country ${mostVisitorsCountry?.code}`)
-    const [phi] = getAngleFromLocation(mostVisitorsCountry?.location)
+    console.log(
+      `focusing on most visited country ${mostVisitorsCountry?.location}`
+    )
+    const [phi] = getAngleFromLocation(mostVisitorsCountry?.coords)
     api.start({
       r: phi,
     })
@@ -165,7 +193,7 @@ export default function GlobeWidget() {
       markers:
         data?.map(x => {
           const marker: Marker = {
-            location: x.location,
+            location: x.coords,
             //   color: [1, 1, 1],
             size: mapVisitorsToMarkSize(x.visits),
           }
@@ -190,31 +218,63 @@ export default function GlobeWidget() {
   }, [isDark, data?.length])
   return (
     <Widget className=" pb-0">
-      <div className="absolute p-8 inset-0 flex flex-col">
-        <div className="self-end">
-          {/* <div className="text-2xl font-medium truncate capitalize">
-            {allVisitors} Current Visitors
-          </div> */}
-          <Title>{allVisitors} Online Visitors</Title>
-          <List>
-            {data?.map((item, i) => {
-              return (
-                <ListItem key={i}>
-                  <button
-                    onClick={() => {
-                      const [phi] = getAngleFromLocation(item.location)
-                      api.start({
-                        r: phi,
-                      })
-                    }}
+      <div className="absolute grid grid-cols-2 gap-6 sm:gap-10  inset-0">
+        <div className=""></div>
+        <div className="p-6">
+          <Widget.Title>Top Countries</Widget.Title>
+          <Widget.Content
+            status={status}
+            noData={!data?.length}
+            warning={warning?.message}
+          >
+            <div className="grid grid-cols-5 gap-x-4 gap-y-2">
+              <div className="col-span-3 text-xs font-semibold tracking-widest text-gray-500 uppercase h-5">
+                Country
+              </div>
+              <div
+                className={cx(
+                  'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5',
+                  sorting === TopLocationsSorting.Visitors && 'text-primary'
+                )}
+                onClick={() => setSorting(TopLocationsSorting.Visitors)}
+              >
+                Visits
+              </div>
+              <div
+                className={cx(
+                  'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5',
+                  sorting === TopLocationsSorting.Pageviews && 'text-primary'
+                )}
+                onClick={() => setSorting(TopLocationsSorting.Pageviews)}
+              >
+                Pageviews
+              </div>
+
+              <div className="col-span-3">
+                <BarList data={chartData} valueFormatter={(_: any) => ''} />
+              </div>
+              <div className="flex flex-col col-span-1 row-span-4 gap-2">
+                {(data ?? []).map(({ location, visits }) => (
+                  <div
+                    key={location}
+                    className="flex items-center justify-end w-full text-neutral-64 h-9"
                   >
-                    {regionNames.of(item.code)}
-                  </button>
-                  <span>{item.visits}</span>
-                </ListItem>
-              )
-            })}
-          </List>
+                    {visits}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col col-span-1 row-span-4 gap-2">
+                {(data ?? []).map(({ location, hits }) => (
+                  <div
+                    key={location}
+                    className="flex items-center justify-end w-full text-neutral-64 h-9"
+                  >
+                    {hits}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Widget.Content>
         </div>
       </div>
       <canvas
@@ -261,5 +321,63 @@ export default function GlobeWidget() {
         }}
       />
     </Widget>
+  )
+}
+
+function getFlagEmoji(countryCode: string) {
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt(0))
+  return String.fromCodePoint(...codePoints)
+}
+
+async function getTopLocations({
+  date_from,
+  date_to,
+  sorting,
+}: {
+  sorting: TopLocationsSorting
+  date_from?: string
+  date_to?: string
+}) {
+  const { data: queryData } = await getPipeFromClient<TopLocationsData>(
+    'top_locations',
+    { limit: 8, date_from, date_to }
+  )
+  const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
+
+  const data = [...queryData]
+    .sort((a, b) => b[sorting] - a[sorting])
+    .map(({ location, ...rest }) => {
+      const unknownLocation = '🌎  Unknown'
+      return {
+        ...rest,
+        coords: locationToCoordinates(location),
+        location: location
+          ? `${getFlagEmoji(location)} ${regionNames.of(location)}`
+          : unknownLocation,
+        shortLocation: location
+          ? `${getFlagEmoji(location)} ${location}`
+          : unknownLocation,
+      }
+    })
+
+  const locations = data.map(({ location }) => location)
+  const labels = data.map(record => record[sorting])
+
+  return data
+}
+
+function useTopLocations() {
+  const { date_from, date_to } = useDateFilter()
+  const [sorting] = useParams({
+    key: 'top_locations_sorting',
+    defaultValue: TopLocationsSorting.Visitors,
+    values: Object.values(TopLocationsSorting),
+  })
+  return useQuery(
+    { sorting, date_from, date_to, key: 'topLocations' },
+    getTopLocations
   )
 }

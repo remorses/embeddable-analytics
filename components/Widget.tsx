@@ -9,7 +9,7 @@ function Widget({ className = '', children }) {
   return (
     <div
       className={clsx(
-        'rounded-lg relative shrink-0 border dark:border-gray-600 p-6 px-6 flex flex-col grow',
+        'rounded-lg relative shrink-0 border dark:border-gray-600 p-6 flex flex-col grow',
         className
       )}
     >

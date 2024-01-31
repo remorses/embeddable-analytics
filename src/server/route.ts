@@ -1,5 +1,27 @@
 import { ClientResponse, QueryError } from '../lib/types'
 
+export async function trackEvent({
+  datasource = 'analytics_events',
+  token,
+  json,
+}) {
+  const r = await fetch(
+    `https://api.tinybird.co/v0/events?name=${datasource}&token=${token}`,
+    {
+      method: 'POST',
+      body: JSON.stringify(json),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  if (!r.ok) {
+    throw new Error('Error sending event')
+  }
+  const data = await r.json()
+  return data
+}
+
 export async function getData({
   pipe,
   token,

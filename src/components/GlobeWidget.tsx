@@ -186,7 +186,7 @@ export default function GlobeWidget() {
       baseColor,
 
       markerColor,
-      offset: [-50, 2 * height],
+      offset: [-180, 2 * height],
       glowColor,
 
       // scale: 2,

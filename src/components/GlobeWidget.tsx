@@ -1,25 +1,25 @@
-import createGlobe, { Marker } from 'cobe'
-import { useRef, useEffect, useMemo } from 'react'
-import { useSpring } from 'react-spring'
-import colors from 'tailwindcss/colors'
-import { useAnalytics } from './Provider'
-import Widget from './Widget'
-import { colord } from 'colord'
-import { countriesCoordinates } from '../lib/countries'
-
-import { useDateFilter, useParams, useQuery } from '../lib/hooks'
+import { BarList, List, ListItem, Title } from '@tremor/react'
 import {
   TopLocation,
   TopLocationsData,
   TopLocationsSorting,
 } from '../lib/types'
+import createGlobe, { Marker } from 'cobe'
 import {
   cx,
   formatDateTimeForClickHouse,
   getPipeFromClient,
 } from '../lib/utils'
-import { BarList, List, ListItem, Title } from '@tremor/react'
-import TopLocationsWidget from './TopLocationsWidget'
+import { parseAsStringLiteral, useQueryState } from 'nuqs'
+import { useDateFilter, useQuery } from '../lib/hooks'
+import { useEffect, useMemo, useRef } from 'react'
+
+import Widget from './Widget'
+import { colord } from 'colord'
+import colors from 'tailwindcss/colors'
+import { countriesCoordinates } from '../lib/countries'
+import { useAnalytics } from './Provider'
+import { useSpring } from 'react-spring'
 
 type Color = [number, number, number]
 
@@ -94,10 +94,15 @@ export default function GlobeWidget() {
   const canvasRef = useRef<any>()
 
   const { data, status, warning } = useTopLocations()
-  const [sorting, setSorting] = useParams({
-    key: 'top_locations_sorting',
-    values: Object.values(TopLocationsSorting),
-  })
+
+  const [sorting, setSorting] = useQueryState<
+    (typeof TopLocationsSorting)[keyof typeof TopLocationsSorting]
+  >(
+    'top_locations_sorting',
+    parseAsStringLiteral(Object.values(TopLocationsSorting)).withDefault(
+      TopLocationsSorting.Visitors
+    )
+  )
   const chartData = useMemo(
     () =>
       (data ?? []).map(d => ({
@@ -371,11 +376,16 @@ async function getTopLocations({
 
 function useTopLocations() {
   const { date_from, date_to } = useDateFilter()
-  const [sorting] = useParams({
-    key: 'top_locations_sorting',
-    defaultValue: TopLocationsSorting.Visitors,
-    values: Object.values(TopLocationsSorting),
-  })
+
+  const [sorting] = useQueryState<
+    (typeof TopLocationsSorting)[keyof typeof TopLocationsSorting]
+  >(
+    'top_locations_sorting',
+    parseAsStringLiteral(Object.values(TopLocationsSorting)).withDefault(
+      TopLocationsSorting.Visitors
+    )
+  )
+
   return useQuery(
     { sorting, date_from, date_to, key: 'topLocations' },
     getTopLocations

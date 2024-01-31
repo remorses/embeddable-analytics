@@ -1,12 +1,13 @@
+import { TopBrowsers, TopBrowsersData } from '../lib/types'
+import { browsers, formatNumber, getPipeFromClient } from '../lib/utils'
+import { useDateFilter, useQuery } from '../lib/hooks'
+
+import { DonutChart } from '@tremor/react'
 import { Fragment } from 'react'
 import Widget from './Widget'
 
-import { browsers, formatNumber, getPipeFromClient } from '../lib/utils'
-import { DonutChart } from '@tremor/react'
 // import { tremorPieChartColors } from '../styles/theme/tremor-colors'
 
-import { useDateFilter, useQuery } from '../lib/hooks'
-import { TopBrowsers, TopBrowsersData } from '../lib/types'
 
 export default function BrowsersWidget() {
   const { date_from: from, date_to: to } = useDateFilter()
@@ -48,7 +49,7 @@ export default function BrowsersWidget() {
                     <div
                       className="h-4 min-w-[1rem]"
                       style={{
-                        backgroundColor: tremorPieChartColors[index][1],
+                        // backgroundColor: tremorPieChartColors[index][1],
                       }}
                     />
                     <span>{browser}</span>

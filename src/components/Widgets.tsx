@@ -1,20 +1,18 @@
-import dynamic, { LoaderComponent } from 'next/dynamic'
-import createGlobe from 'cobe'
-import { useSpring } from 'react-spring'
-
-import InView from './InView'
-import Widget from './Widget'
-import { globalState } from '../lib/utils'
 import AnalyticsProvider, { useAnalytics } from './Provider'
+import dynamic, { LoaderComponent } from 'next/dynamic'
+import { useEffect, useRef, useState } from 'react'
+
 import DateFilter from './DateFilter'
+import GlobeWidget from './GlobeWidget'
+import InView from './InView'
 import KPIsWidget from './KpisWidget'
 import TopDevicesWidget from './TopDevicesWidget'
-import TopLocationsWidget from './TopLocationsWidget'
 import TopPagesWidget from './TopPagesWidget'
 import TopSourcesWidget from './TopSourcesWidget'
-
-import { useRef, useEffect, useState } from 'react'
-import GlobeWidget from './GlobeWidget'
+import Widget from './Widget'
+import createGlobe from 'cobe'
+import { globalState } from '../lib/utils'
+import { useSpring } from 'react-spring'
 
 enum WidgetHeight {
   XLarge = 588,

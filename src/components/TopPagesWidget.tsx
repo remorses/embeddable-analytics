@@ -1,19 +1,24 @@
-import { BarList } from '@tremor/react'
-import { useMemo } from 'react'
-import { useDateFilter, useParams, useQuery } from '../lib/hooks'
 import { TopPagesData, TopPagesSorting } from '../lib/types'
 import { cx, formatNumber, getPipeFromClient } from '../lib/utils'
-import Widget from './Widget'
+import { parseAsStringLiteral, useQueryState } from 'nuqs'
+import { useDateFilter, useQuery } from '../lib/hooks'
 
+import { BarList } from '@tremor/react'
+import Widget from './Widget'
 import { useAnalytics } from './Provider'
+import { useMemo } from 'react'
 
 export default function TopPagesWidget() {
   const { data, status, warning } = useTopPages()
   const { domain } = useAnalytics()
-  const [sorting, setSorting] = useParams({
-    key: 'top_pages_sorting',
-    values: Object.values(TopPagesSorting),
-  })
+  const [sorting, setSorting] = useQueryState<
+    (typeof TopPagesSorting)[keyof typeof TopPagesSorting]
+  >(
+    'top_locations_sorting',
+    parseAsStringLiteral(Object.values(TopPagesSorting)).withDefault(
+      TopPagesSorting.Visitors
+    )
+  )
   const chartData = useMemo(
     () =>
       (data?.data ?? []).map(d => ({
@@ -125,10 +130,13 @@ async function getTopPages({
 
 function useTopPages() {
   const { date_from, date_to } = useDateFilter()
-  const [sorting] = useParams({
-    key: 'top_pages_sorting',
-    defaultValue: TopPagesSorting.Visitors,
-    values: Object.values(TopPagesSorting),
-  })
+  const [sorting, setSorting] = useQueryState<
+    (typeof TopPagesSorting)[keyof typeof TopPagesSorting]
+  >(
+    'top_locations_sorting',
+    parseAsStringLiteral(Object.values(TopPagesSorting)).withDefault(
+      TopPagesSorting.Visitors
+    )
+  )
   return useQuery({ sorting, date_from, date_to, key: 'topPages' }, getTopPages)
 }

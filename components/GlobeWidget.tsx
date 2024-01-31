@@ -14,6 +14,7 @@ import {
   TopLocationsSorting,
 } from '../lib/types'
 import { formatDateTimeForClickHouse, getPipeFromClient } from '../lib/utils'
+import { List, ListItem, Title } from '@tremor/react'
 
 type Color = [number, number, number]
 
@@ -52,7 +53,7 @@ async function getTopLocations({}) {
     visits: number
     location: string
   }>('current_locations', { limit: 100 })
-//   console.log(queryData[0])
+  //   console.log(queryData[0])
   const data = [...queryData]
     // .sort((a, b) => b[sorting] - a[sorting])
     .map(({ location: code, visits }) => {
@@ -60,6 +61,7 @@ async function getTopLocations({}) {
       return {
         location,
         visits,
+        code,
         // ...rest,
       }
     })
@@ -81,6 +83,8 @@ function mapVisitorsToMarkSize(visitors: number) {
   return Math.max(min, Math.min(max, size))
 }
 
+const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
+
 export default function GlobeWidget() {
   const canvasRef = useRef<any>()
 
@@ -97,15 +101,16 @@ export default function GlobeWidget() {
   }, [data])
 
   useEffect(() => {
-    const mostVisitorsCountry = data?.[0]?.location
+    const mostVisitorsCountry = data?.[0]
     if (!mostVisitorsCountry) {
       return
     }
-    const [phi] = getAngleFromLocation(mostVisitorsCountry)
+    console.log(`focusing on most visited country ${mostVisitorsCountry?.code}`)
+    const [phi] = getAngleFromLocation(mostVisitorsCountry?.location)
     api.start({
       r: phi,
     })
-  }, [data])
+  }, [data?.length])
   const pointerInteracting = useRef<number | null>(null)
   const pointerInteractionMovement = useRef(0)
   let { isDark } = useAnalytics()
@@ -187,9 +192,29 @@ export default function GlobeWidget() {
     <Widget className=" pb-0">
       <div className="absolute p-8 inset-0 flex flex-col">
         <div className="self-end">
-          <div className="text-2xl font-medium truncate capitalize">
+          {/* <div className="text-2xl font-medium truncate capitalize">
             {allVisitors} Current Visitors
-          </div>
+          </div> */}
+          <Title>{allVisitors} Online Visitors</Title>
+          <List>
+            {data?.map((item, i) => {
+              return (
+                <ListItem key={i}>
+                  <button
+                    onClick={() => {
+                      const [phi] = getAngleFromLocation(item.location)
+                      api.start({
+                        r: phi,
+                      })
+                    }}
+                  >
+                    {regionNames.of(item.code)}
+                  </button>
+                  <span>{item.visits}</span>
+                </ListItem>
+              )
+            })}
+          </List>
         </div>
       </div>
       <canvas

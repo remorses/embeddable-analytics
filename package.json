@@ -1,27 +1,16 @@
 {
-  "name": "@tinybirdco/analytics-dashboard",
-  "version": "1.4.0",
-  "description": "Tinybird web analytics dashboard",
-  "homepage": "https://github.com/tinybirdco/web-analytics-starter-kit/tree/main/dashboard#README",
-  "bugs": {
-    "url": "https://github.com/tinybirdco/web-analytics-starter-kit/issues"
-  },
+  "name": "embeddable-analytics",
+  "version": "0.0.0",
+  "description": "Embeddable React multi tenant analytics dashboard",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinybirdco/web-analytics-starter-kit"
+    "url": "https://github.com/remorses/embeddable-analytics"
   },
   "license": "MIT",
-  "author": "Tinybird team",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "vitest",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "test:e2e:dev": "start-server-and-test dev http://localhost:3000 cy:open",
-    "test:e2e:run": "start-server-and-test dev http://localhost:3000 cy:run"
+    "start": "next start"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",

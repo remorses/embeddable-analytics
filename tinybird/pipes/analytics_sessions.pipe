@@ -16,9 +16,10 @@ SQL >
         namespace
     FROM analytics_hits
     GROUP BY
+        namespace,
         date,
-        session_id,
-        namespace
+        session_id
+        
 
 TYPE materialized
 DATASOURCE analytics_sessions_mv

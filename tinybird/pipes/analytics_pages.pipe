@@ -15,12 +15,12 @@ SQL >
         namespace
     FROM analytics_hits
     GROUP BY
+        namespace,
         date,
         device,
         browser,
         location,
-        pathname,
-        namespace
+        pathname
 
 TYPE materialized
 DATASOURCE analytics_pages_mv

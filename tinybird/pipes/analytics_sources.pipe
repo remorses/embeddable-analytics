@@ -16,12 +16,13 @@ SQL >
     FROM analytics_hits
     # WHERE domainWithoutWWW(referrer) != currenct_domain
     GROUP BY
+        namespace,
         date,
         device,
         browser,
         location,
-        referrer,
-        namespace
+        referrer
+        
 
 TYPE materialized
 DATASOURCE analytics_sources_mv

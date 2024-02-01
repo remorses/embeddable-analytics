@@ -43,7 +43,7 @@ export function useDateFilter() {
         },
       },
       undefined,
-      { scroll: false }
+      { scroll: false, shallow: true }
     )
   }
 

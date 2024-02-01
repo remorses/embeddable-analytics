@@ -11,7 +11,7 @@ import {
 import { parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useDateFilter, useQuery } from '../lib/hooks'
 
-import { BarChart } from '@tremor/react'
+import { AreaChart, BarChart } from '@tremor/react'
 import KPIsTabs from './KpisTabs'
 import Widget from './Widget'
 import { format } from 'date-fns'
@@ -54,7 +54,7 @@ export default function KPIsWidget() {
         warning={warning?.message}
         className="pt-2 mt-4"
       >
-        <BarChart
+        <AreaChart
           data={chartData}
           index="date"
           categories={[kpiOption.label]}

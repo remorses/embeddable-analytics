@@ -1,5 +1,3 @@
-import { Color } from '@tremor/react'
-
 import {
   formatMinSec,
   formatNumber,
@@ -7,6 +5,7 @@ import {
   kFormatter,
 } from './utils'
 
+import { Color } from '@tremor/react'
 import { SWRResponse } from 'swr'
 
 export type ClientResponse<T> = T & { error?: string }
@@ -99,7 +98,7 @@ export type KpisData = {
   avg_session_sec: number
 }
 
-const ALL_KPIS = [
+export const ALL_KPIS = [
   'visits',
   'pageviews',
   'avg_session_sec',

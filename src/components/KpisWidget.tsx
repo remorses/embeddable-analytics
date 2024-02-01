@@ -1,4 +1,5 @@
 import {
+  ALL_KPIS,
   ChartValue,
   KPI_OPTIONS,
   KpiTotals,
@@ -7,6 +8,7 @@ import {
   QueryError,
   isKpi,
 } from '../lib/types'
+import { parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useDateFilter, useQuery } from '../lib/hooks'
 
 import { BarChart } from '@tremor/react'
@@ -15,7 +17,6 @@ import Widget from './Widget'
 import { format } from 'date-fns'
 import { getPipeFromClient } from '../lib/utils'
 import { useMemo } from 'react'
-import { useQueryState } from 'nuqs'
 import { useRouter } from 'next/router'
 
 export default function KPIsWidget() {
@@ -159,6 +160,7 @@ async function getKpis({
   const dates = queryData.map(({ date }) =>
     format(new Date(date), isHourlyGranularity ? 'HH:00' : 'MMM dd, yyyy')
   )
+
   const isCurrentData = arrayHasCurrentDate(dates, isHourlyGranularity)
 
   const data = isCurrentData
@@ -190,10 +192,10 @@ function useKpis() {
   const { date_from, date_to } = useDateFilter()
   const router = useRouter()
 
-  const [kpi, setKpi] = useQueryState<KpiType>('kpi', {
-    defaultValue: 'visits',
-    parse: x => x as any,
-  })
+  const [kpi, setKpi] = useQueryState<KpiType>(
+    'kpi',
+    parseAsStringLiteral(ALL_KPIS).withDefault('visits')
+  )
   const kpiOption = KPI_OPTIONS.find(({ value }) => value === kpi)!
   const query = useQuery({ kpi, date_from, date_to, key: 'kpis' }, getKpis)
 

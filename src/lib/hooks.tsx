@@ -160,6 +160,7 @@ export function useQuery<T, K extends Key>(
   const { data, error, isValidating } = query
 
   const getStatus = () => {
+    // return 'loading'
     if (!data && !error) return 'loading'
     if (isValidating) return 'updating'
     if (error) return 'error'

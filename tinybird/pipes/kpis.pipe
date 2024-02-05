@@ -55,6 +55,7 @@ SQL >
           analytics_hits
         where
           toDate(timestamp) = {{Date(date_from)}}
+          and namespace = {{String(namespace, required=True)}}
         group by
           toStartOfHour(timestamp), session_id
         {% else %}

@@ -172,6 +172,8 @@ function _uuidv4() {
   )
 }
 
+let sessionIdCache: string
+
 /**
  * Set session id
  */
@@ -189,13 +191,19 @@ function _setSessionId({ cookieName }) {
   // }
 
   document.cookie = cookieValue
+  sessionIdCache = sessionId
 }
 
 function _getSessionId({ cookieName }) {
+  if (sessionIdCache) return sessionIdCache
   let cookie = {}
   document.cookie.split(';').forEach(function (el) {
     let [key, value] = el.split('=')
     cookie[key.trim()] = value
   })
-  return cookie[cookieName]
+  let value = cookie[cookieName]
+  if (value) {
+    sessionIdCache = value
+  }
+  return value
 }

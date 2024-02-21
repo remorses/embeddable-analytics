@@ -50,7 +50,7 @@ export function init({
         session_id: _getSessionId({ cookieName }),
         payload,
         namespace,
-      })
+      }),
     )
   }
   track = _sendEvent
@@ -119,48 +119,6 @@ export function init({
 }
 
 /**
- * Try to mask PPI and potential sensible attributes
- *
- * @param  { object } payload Event payload
- * @return { object } Sanitized payload
- */
-const _maskSuspiciousAttributes = payload => {
-  const attributesToMask = [
-    'username',
-    'user',
-    'user_id',
-    'userid',
-    'password',
-    'pass',
-    'pin',
-    'passcode',
-    'token',
-    'api_token',
-    'email',
-    'address',
-    'phone',
-    'sex',
-    'gender',
-    'order',
-    'order_id',
-    'orderid',
-    'payment',
-    'credit_card',
-  ]
-
-  // Deep copy
-  let _payload = JSON.stringify(payload)
-  attributesToMask.forEach(attr => {
-    _payload = _payload.replaceAll(
-      new RegExp(`("${attr}"):(".+?"|\\d+)`, 'mgi'),
-      '$1:"********"'
-    )
-  })
-
-  return _payload
-}
-
-/**
  * Generate uuid to identify the session. Random, not data-derived
  */
 function _uuidv4() {
@@ -168,7 +126,7 @@ function _uuidv4() {
     (
       c ^
       (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-    ).toString(16)
+    ).toString(16),
   )
 }
 

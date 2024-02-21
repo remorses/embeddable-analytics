@@ -25,7 +25,7 @@ export default function KPIsWidget() {
   const { date_from: from, date_to: to } = useDateFilter()
   const { data: kpiTotals, warning: warningTotals } = useQuery(
     { date_from: from, date_to: to, key: 'kpiTotals' },
-    getKpiTotals
+    getKpiTotals,
   )
 
   const chartData = useMemo(
@@ -33,7 +33,7 @@ export default function KPIsWidget() {
       (data?.dates ?? []).map((date, index) => {
         const value = Math.max(
           Number(data?.data[0][index]) || 0,
-          Number(data?.data[1][index]) || 0
+          Number(data?.data[1][index]) || 0,
         )
 
         return {
@@ -41,7 +41,7 @@ export default function KPIsWidget() {
           [kpiOption.label]: value,
         }
       }),
-    [data?.data, data?.dates, kpiOption]
+    [data?.data, data?.dates, kpiOption],
   )
 
   return (
@@ -54,7 +54,7 @@ export default function KPIsWidget() {
         warning={warning?.message}
         className="pt-2 mt-4"
       >
-        <AreaChart
+        <BarChart
           data={chartData}
           index="date"
           categories={[kpiOption.label]}
@@ -101,7 +101,7 @@ async function getKpiTotals({ date_from, date_to }): Promise<KpiTotals> {
   const _ponderatedKPIsTotal = (kpi: KpiType) =>
     queryData.reduce(
       (prev, curr) => prev + ((curr[kpi] ?? 0) * curr['visits']) / totalVisits,
-      0
+      0,
     )
 
   return {
@@ -158,7 +158,7 @@ async function getKpis({
   })
   const isHourlyGranularity = !!date_from && !!date_to && date_from === date_to
   const dates = queryData.map(({ date }) =>
-    format(new Date(date), isHourlyGranularity ? 'HH:00' : 'MMM dd, yyyy')
+    format(new Date(date), isHourlyGranularity ? 'HH:00' : 'MMM dd, yyyy'),
   )
 
   const isCurrentData = arrayHasCurrentDate(dates, isHourlyGranularity)
@@ -178,7 +178,7 @@ async function getKpis({
             [...currentPart, currentValue],
           ]
         },
-        [[], []] as ChartValue[][]
+        [[], []] as ChartValue[][],
       )
     : [queryData.map(value => value[kpi] ?? 0), ['']]
 
@@ -194,7 +194,7 @@ function useKpis() {
 
   const [kpi, setKpi] = useQueryState<KpiType>(
     'kpi',
-    parseAsStringLiteral(ALL_KPIS).withDefault('visits')
+    parseAsStringLiteral(ALL_KPIS).withDefault('visits'),
   )
   const kpiOption = KPI_OPTIONS.find(({ value }) => value === kpi)!
   const query = useQuery({ kpi, date_from, date_to, key: 'kpis' }, getKpis)

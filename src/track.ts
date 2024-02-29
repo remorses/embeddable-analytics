@@ -47,7 +47,7 @@ export function init({
         timestamp: new Date().toISOString(),
         action: name,
         version: '1',
-        session_id: _getSessionId({ cookieName }),
+        session_id: _getSessionId({ cookieName }) || 'iframe',
         payload,
         namespace,
       }),

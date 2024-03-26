@@ -19,7 +19,7 @@ import { colord } from 'colord'
 import colors from 'tailwindcss/colors'
 import { countriesCoordinates } from '../lib/countries'
 import { useAnalytics } from './Provider'
-import { useSpring } from 'react-spring'
+import { useSpring } from 'framer-motion'
 
 type Color = [number, number, number]
 
@@ -30,10 +30,13 @@ function getColor(color: string): Color {
   return nums
 }
 
-const countriesCodeToCoordinates = countriesCoordinates.reduce((acc, x) => {
-  acc[x.country] = [x.latitude, x.longitude]
-  return acc
-}, {} as Record<string, [number, number]>)
+const countriesCodeToCoordinates = countriesCoordinates.reduce(
+  (acc, x) => {
+    acc[x.country] = [x.latitude, x.longitude]
+    return acc
+  },
+  {} as Record<string, [number, number]>,
+)
 
 // console.log(countriesCodeToCoordinates)
 
@@ -100,8 +103,8 @@ export default function GlobeWidget() {
   >(
     'top_locations_sorting',
     parseAsStringLiteral(Object.values(TopLocationsSorting)).withDefault(
-      TopLocationsSorting.Visitors
-    )
+      TopLocationsSorting.Visitors,
+    ),
   )
   const chartData = useMemo(
     () =>
@@ -110,9 +113,7 @@ export default function GlobeWidget() {
           <button
             onClick={() => {
               const [phi] = getAngleFromLocation(d.coords)
-              api.start({
-                r: phi,
-              })
+              radius.set(phi)
             }}
           >
             {d.location}
@@ -121,7 +122,7 @@ export default function GlobeWidget() {
 
         value: d[sorting],
       })),
-    [data, sorting]
+    [data, sorting],
   )
   //   console.log({ data, warning, error })
   const allVisitors = useMemo(() => {
@@ -137,12 +138,10 @@ export default function GlobeWidget() {
       return
     }
     console.log(
-      `focusing on most visited country ${mostVisitorsCountry?.location}`
+      `focusing on most visited country ${mostVisitorsCountry?.location}`,
     )
     const [phi] = getAngleFromLocation(mostVisitorsCountry?.coords)
-    api.start({
-      r: phi,
-    })
+    radius.set(phi)
   }, [data?.length])
   const pointerInteracting = useRef<number | null>(null)
   const pointerInteractionMovement = useRef(0)
@@ -155,15 +154,12 @@ export default function GlobeWidget() {
   const markerColor: Color = isDark
     ? getColor(colors.red[400])
     : getColor(colors.blue[500])
-  const [{ r }, api] = useSpring(() => ({
-    r: 0,
-    config: {
-      mass: 1,
-      tension: 280,
-      friction: 40,
-      precision: 0.001,
-    },
-  }))
+  const radius = useSpring(0, {
+    mass: 1,
+    stiffness: 280,
+    damping: 40,
+  })
+
   let dark = isDark ? 1 : 0
 
   const factor = 3
@@ -205,9 +201,9 @@ export default function GlobeWidget() {
           return marker
         }) || [],
       onRender: state => {
-        state.phi = r.get()
-        if (!r.isAnimating) {
-          r.set(r.get() + 0.0005)
+        state.phi = radius.get()
+        if (!radius.isAnimating) {
+          radius.set(radius.get() + 0.0005)
         }
 
         state.width = height * factor
@@ -239,7 +235,7 @@ export default function GlobeWidget() {
               <div
                 className={cx(
                   'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5',
-                  sorting === TopLocationsSorting.Visitors && 'text-primary'
+                  sorting === TopLocationsSorting.Visitors && 'text-primary',
                 )}
                 onClick={() => setSorting(TopLocationsSorting.Visitors)}
               >
@@ -248,7 +244,7 @@ export default function GlobeWidget() {
               <div
                 className={cx(
                   'col-span-1 font-semibold text-xs text-right tracking-widest uppercase cursor-pointer h-5',
-                  sorting === TopLocationsSorting.Pageviews && 'text-primary'
+                  sorting === TopLocationsSorting.Pageviews && 'text-primary',
                 )}
                 onClick={() => setSorting(TopLocationsSorting.Pageviews)}
               >
@@ -301,18 +297,14 @@ export default function GlobeWidget() {
           if (pointerInteracting.current !== null) {
             const delta = e.clientX - pointerInteracting.current
             pointerInteractionMovement.current = delta
-            api.start({
-              r: delta / 200,
-            })
+            radius.set(delta / 200)
           }
         }}
         onTouchMove={e => {
           if (pointerInteracting.current !== null && e.touches[0]) {
             const delta = e.touches[0].clientX - pointerInteracting.current
             pointerInteractionMovement.current = delta
-            api.start({
-              r: delta / 100,
-            })
+            radius.set(delta / 100)
           }
         }}
         className="flex flex-col grow"
@@ -348,7 +340,7 @@ async function getTopLocations({
 }) {
   const { data: queryData } = await getPipeFromClient<TopLocationsData>(
     'top_locations',
-    { limit: 8, date_from, date_to }
+    { limit: 8, date_from, date_to },
   )
   const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
 
@@ -382,12 +374,12 @@ function useTopLocations() {
   >(
     'top_locations_sorting',
     parseAsStringLiteral(Object.values(TopLocationsSorting)).withDefault(
-      TopLocationsSorting.Visitors
-    )
+      TopLocationsSorting.Visitors,
+    ),
   )
 
   return useQuery(
     { sorting, date_from, date_to, key: 'topLocations' },
-    getTopLocations
+    getTopLocations,
   )
 }

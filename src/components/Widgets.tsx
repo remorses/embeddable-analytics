@@ -1,7 +1,6 @@
 import AnalyticsProvider, { useAnalytics } from './Provider'
-import dynamic, { LoaderComponent } from 'next/dynamic'
-import { useEffect, useRef, useState } from 'react'
 
+import { globalState } from '../lib/utils'
 import DateFilter from './DateFilter'
 import GlobeWidget from './GlobeWidget'
 import InView from './InView'
@@ -9,10 +8,6 @@ import KPIsWidget from './KpisWidget'
 import TopDevicesWidget from './TopDevicesWidget'
 import TopPagesWidget from './TopPagesWidget'
 import TopSourcesWidget from './TopSourcesWidget'
-import Widget from './Widget'
-import createGlobe from 'cobe'
-import { globalState } from '../lib/utils'
-import { useSpring } from 'react-spring'
 
 const height = 440
 

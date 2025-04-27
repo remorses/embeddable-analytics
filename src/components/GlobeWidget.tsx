@@ -94,7 +94,7 @@ function mapVisitorsToMarkSize(visitors: number) {
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
 
 export default function GlobeWidget() {
-  const canvasRef = useRef<any>()
+  const canvasRef = useRef<any>(null)
 
   const { data, status, warning } = useTopLocations()
 

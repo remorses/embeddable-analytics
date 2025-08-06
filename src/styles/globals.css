@@ -7,9 +7,12 @@
   src: url(/fonts/Inter-roman-latin.var.woff2) format('woff2');
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@source './src/**/*.{js,ts,jsx,tsx}';
+@source '../node_modules/@tremor/react/dist/**/*.{js,ts,jsx,tsx}';
+@source '../node_modules/@headlessui/react/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+@import './tremor.css';
 
 /* Reset tremor font-family */
 :root {

@@ -1,0 +1,28 @@
+/* Tremor theme tokens for embeddable-analytics */
+
+@theme {
+    /* Box shadows */
+    --shadow-tremor-input: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-tremor-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-tremor-dropdown: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    
+    /* Dark mode shadows */
+    --shadow-dark-tremor-input: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-dark-tremor-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-dark-tremor-dropdown: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+    /* Border radius */
+    --radius-tremor-small: 0.375rem;
+    --radius-tremor-default: 0.5rem;
+    --radius-tremor-full: 9999px;
+
+    /* Font sizes */
+    --font-size-tremor-label: 0.75rem;
+    --line-height-tremor-label: 1rem;
+    --font-size-tremor-default: 0.875rem;
+    --line-height-tremor-default: 1.25rem;
+    --font-size-tremor-title: 1.125rem;
+    --line-height-tremor-title: 1.75rem;
+    --font-size-tremor-metric: 1.875rem;
+    --line-height-tremor-metric: 2.25rem;
+}

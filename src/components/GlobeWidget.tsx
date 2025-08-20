@@ -15,7 +15,7 @@ import { useDateFilter, useQuery } from '../lib/hooks'
 import { useEffect, useMemo, useRef } from 'react'
 
 import Widget from './Widget'
-import { colord } from 'colord'
+import { parse } from 'culori'
 import colors from 'tailwindcss/colors'
 import { countriesCoordinates } from '../lib/countries'
 import { useAnalytics } from './Provider'
@@ -24,8 +24,8 @@ import { useSpring } from 'framer-motion'
 type Color = [number, number, number]
 
 function getColor(color: string): Color {
-  const c = colord(color).toRgb()
-  const nums: Color = [c.r / 255, c.g / 255, c.b / 255]
+  const c = parse(color)
+  const nums: Color = [c.r || 0, c.g || 0, c.b || 0]
   //   console.log(nums)
   return nums
 }

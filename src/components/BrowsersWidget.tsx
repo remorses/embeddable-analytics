@@ -47,7 +47,7 @@ export default function BrowsersWidget() {
                 <Fragment key={browser}>
                   <div className="flex items-center gap-2 text-sm leading-5 text-neutral-64 h-9 px-4 py-2 rounded-md z-10">
                     <div
-                      className="h-4 min-w-[1rem]"
+                      className="h-4 min-w-4"
                       style={{
                         // backgroundColor: tremorPieChartColors[index][1],
                       }}

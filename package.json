@@ -37,7 +37,7 @@
     "@types/react-dom": "19.2.1",
     "autoprefixer": "^10.4.8",
     "framer-motion": "^12.23.12",
-    "next": "15.5.4",
+    "next": "15.5.5",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "react": "19.2.0",

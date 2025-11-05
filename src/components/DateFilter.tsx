@@ -41,7 +41,7 @@ const dateFilterOptions: DateRangePickerOption[] = [
 
 export default function DateFilter() {
   const { dateRangePickerValue, onDateRangePickerValueChange } = useDateFilter()
-  
+
   const getSelectedLabel = () => {
     const selectValue = dateRangePickerValue?.selectValue
     const option = dateFilterOptions.find((opt) => opt.value === selectValue)
@@ -57,7 +57,7 @@ export default function DateFilter() {
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center text-sm gap-4">
       <div className="inline-flex items-center rounded shadow-sm">
         <span className="rounded-l border border-border bg-background px-3 py-2 focus:z-10">
           <RiCalendar2Line

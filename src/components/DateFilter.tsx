@@ -58,7 +58,7 @@ export default function DateFilter() {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="inline-flex items-center rounded shadow-tremor-input dark:shadow-dark-tremor-input">
+      <div className="inline-flex items-center rounded shadow-sm">
         <span className="rounded-l border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3 py-2 focus:z-10">
           <RiCalendar2Line
             className="size-5 shrink-0 text-gray-500 dark:text-gray-500"

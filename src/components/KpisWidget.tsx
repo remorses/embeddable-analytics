@@ -11,7 +11,7 @@ import {
 import { parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useDateFilter, useQuery } from '../lib/hooks'
 
-import { AreaChart, BarChart } from '@tremor/react'
+import { BarChart } from './visualizations/BarChart'
 import KPIsTabs from './KpisTabs'
 import Widget from './Widget'
 import { format } from 'date-fns'

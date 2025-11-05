@@ -1,10 +1,10 @@
-import { BarList } from '@tremor/react'
 import Widget from './Widget'
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { formatNumber, getPipeFromClient } from '../lib/utils'
 import { useMemo } from 'react'
 
 import { TopSources, TopSource } from '../lib/types'
+import { BarList } from './visualizations/BarList'
 
 export default function TopSourcesWidget() {
   const { data, status, warning } = useTopSources()

@@ -10,8 +10,13 @@ import {
 } from 'react'
 import useSWR, { Fetcher, Key } from 'swr'
 
-import { DateRangePickerValue } from '@tremor/react'
 import { useRouter } from 'next/router'
+
+type DateRangePickerValue = {
+  from?: Date
+  to?: Date
+  selectValue?: string
+}
 
 export function useDateFilter() {
   const router = useRouter()

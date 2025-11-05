@@ -1,9 +1,9 @@
-import { BarList, DonutChart } from '@tremor/react'
 import { Fragment, useMemo } from 'react'
 
 import { cx, devices, formatNumber, getPipeFromClient } from '../lib/utils'
 import { tremorPieChartColors } from '../styles/theme/tremor-colors'
 import Widget from './Widget'
+import { BarList } from './visualizations/BarList'
 
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { TopDevices, TopDevicesData, TopLocationsSorting } from '../lib/types'

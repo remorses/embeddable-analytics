@@ -5,7 +5,6 @@ import {
   kFormatter,
 } from './utils'
 
-import { Color } from '@tremor/react'
 import { SWRResponse } from 'swr'
 
 export type ClientResponse<T> = T & { error?: string }

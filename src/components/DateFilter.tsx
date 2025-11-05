@@ -1,7 +1,5 @@
-import { Popover } from '@headlessui/react'
-import { DateRangePicker, DateRangePickerItem } from '@tremor/react'
-
-import { QuestionIcon } from './Icons'
+import React from 'react'
+import { RiArrowDownSLine, RiCalendar2Line } from '@remixicon/react'
 import { subDays } from 'date-fns'
 
 import {
@@ -9,6 +7,13 @@ import {
   DateRangePickerOption,
 } from '../lib/types'
 import { useDateFilter } from '../lib/hooks'
+import { cx, focusInput } from '../lib/utils'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/DropdownMenu'
 
 const dateFilterOptions: DateRangePickerOption[] = [
   { text: 'Today', value: DateFilterType.Today, startDate: new Date() },
@@ -18,17 +23,17 @@ const dateFilterOptions: DateRangePickerOption[] = [
     startDate: subDays(new Date(), 1),
   },
   {
-    text: '7 days',
+    text: 'Last 7 days',
     value: DateFilterType.Last7Days,
     startDate: subDays(new Date(), 7),
   },
   {
-    text: '30 days',
+    text: 'Last 30 days',
     value: DateFilterType.Last30Days,
     startDate: subDays(new Date(), 30),
   },
   {
-    text: '12 months',
+    text: 'Last 12 months',
     value: DateFilterType.Last12Months,
     startDate: subDays(new Date(), 365),
   },
@@ -36,22 +41,59 @@ const dateFilterOptions: DateRangePickerOption[] = [
 
 export default function DateFilter() {
   const { dateRangePickerValue, onDateRangePickerValueChange } = useDateFilter()
-  // console.log({ dateRangePickerValue })
+  
+  const getSelectedLabel = () => {
+    const selectValue = dateRangePickerValue?.selectValue
+    const option = dateFilterOptions.find((opt) => opt.value === selectValue)
+    return option?.text || 'Last 30 days'
+  }
+
+  const handleItemClick = (value: string, startDate: Date) => {
+    onDateRangePickerValueChange({
+      from: startDate,
+      to: new Date(),
+      selectValue: value,
+    })
+  }
+
   return (
     <div className="flex items-center gap-4">
-      <div className="min-w-[165px]">
-        <DateRangePicker
-          value={dateRangePickerValue}
-          onValueChange={onDateRangePickerValueChange}
-          // options={dateFilterOptions}
-          enableYearNavigation
-        >
-          {dateFilterOptions.map(({ text, value, startDate }) => (
-            <DateRangePickerItem key={text} value={value} from={startDate}>
-              {text}
-            </DateRangePickerItem>
-          ))}
-        </DateRangePicker>
+      <div className="inline-flex items-center rounded shadow-tremor-input dark:shadow-dark-tremor-input">
+        <span className="rounded-l border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3 py-2 focus:z-10">
+          <RiCalendar2Line
+            className="size-5 shrink-0 text-gray-500 dark:text-gray-500"
+            aria-hidden={true}
+          />
+        </span>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className={cx(
+                focusInput,
+                '-ml-px flex items-center gap-2 rounded-r border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 py-2 font-medium text-gray-900 dark:text-gray-50 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900 focus:z-10 focus:outline-none',
+              )}
+            >
+              {getSelectedLabel()}
+              <RiArrowDownSLine
+                className="-mr-1 size-5 shrink-0"
+                aria-hidden={true}
+              />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]">
+            {dateFilterOptions.map((item) => (
+              <DropdownMenuItem
+                key={item.value}
+                onClick={() => {
+                  handleItemClick(item.value, item.startDate)
+                }}
+              >
+                {item.text}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )

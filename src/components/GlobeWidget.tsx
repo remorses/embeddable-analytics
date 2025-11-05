@@ -1,9 +1,9 @@
-import { BarList, List, ListItem, Title } from '@tremor/react'
 import {
   TopLocation,
   TopLocationsData,
   TopLocationsSorting,
 } from '../lib/types'
+import { BarList } from './visualizations/BarList'
 import createGlobe, { Marker } from 'cobe'
 import {
   cx,
@@ -16,8 +16,12 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import Widget from './Widget'
 import { parse } from 'culori'
-import colors from 'tailwindcss/colors'
 import { countriesCoordinates } from '../lib/countries'
+
+const colors = {
+  blue: { 50: '#eff6ff', 300: '#93c5fd', 500: '#3b82f6' },
+  red: { 400: '#f87171' },
+}
 import { useAnalytics } from './Provider'
 import { useSpring } from 'framer-motion'
 

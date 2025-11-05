@@ -1,4 +1,4 @@
-import { BarChart } from '@tremor/react'
+import { BarChart } from './visualizations/BarChart'
 import Widget from './Widget'
 import { useDateFilter, useQuery } from '../lib/hooks'
 import { useMemo } from 'react'

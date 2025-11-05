@@ -2,11 +2,9 @@ import { TopBrowsers, TopBrowsersData } from '../lib/types'
 import { browsers, formatNumber, getPipeFromClient } from '../lib/utils'
 import { useDateFilter, useQuery } from '../lib/hooks'
 
-import { DonutChart } from '@tremor/react'
+import { DonutChart } from './visualizations/DonutChart'
 import { Fragment } from 'react'
 import Widget from './Widget'
-
-// import { tremorPieChartColors } from '../styles/theme/tremor-colors'
 
 
 export default function BrowsersWidget() {
@@ -29,9 +27,8 @@ export default function BrowsersWidget() {
           <DonutChart
             variant="pie"
             data={data?.data ?? []}
-            category="visits"
-            index="browser"
-            // colors={tremorPieChartColors.map(([color]) => color)}
+            category="browser"
+            value="visits"
             showLabel={false}
             valueFormatter={formatNumber}
           />

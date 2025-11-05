@@ -1,6 +1,27 @@
-import { Color } from '@tremor/react'
+type Color =
+  | 'amber'
+  | 'blue'
+  | 'cyan'
+  | 'emerald'
+  | 'fuchsia'
+  | 'gray'
+  | 'green'
+  | 'indigo'
+  | 'lime'
+  | 'neutral'
+  | 'orange'
+  | 'pink'
+  | 'purple'
+  | 'red'
+  | 'rose'
+  | 'sky'
+  | 'slate'
+  | 'stone'
+  | 'teal'
+  | 'violet'
+  | 'yellow'
+  | 'zinc'
 
-// https://www.tremor.so/docs/layout/color-palette
 const tremorColors: Record<Color, string> = {
   amber: '#f59e0b',
   blue: '#3b82f6',

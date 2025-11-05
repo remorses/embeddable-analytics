@@ -3,10 +3,10 @@ import { cx, formatNumber, getPipeFromClient } from '../lib/utils'
 import { parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useDateFilter, useQuery } from '../lib/hooks'
 
-import { BarList } from '@tremor/react'
 import Widget from './Widget'
 import { useAnalytics } from './Provider'
 import { useMemo } from 'react'
+import { BarList } from './visualizations/BarList'
 
 export default function TopPagesWidget() {
   const { data, status, warning } = useTopPages()

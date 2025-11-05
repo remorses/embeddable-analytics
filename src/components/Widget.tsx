@@ -1,21 +1,15 @@
-import { Card, Title } from '@tremor/react'
+import { Card } from './ui/Card'
 
 import Loader from './Loader'
 import { QueryStatus } from '../lib/types'
 import { ReactNode } from 'react'
-import clsx from 'clsx'
 import { cx } from '../lib/utils'
 
 function Widget({ className = '', children }) {
   return (
-    <div
-      className={clsx(
-        'rounded-lg relative shrink-0 border dark:border-gray-600 p-6 flex flex-col grow',
-        className
-      )}
-    >
+    <Card className={cx('relative shrink-0 flex flex-col grow', className)}>
       {children}
-    </div>
+    </Card>
   )
 }
 
@@ -27,7 +21,9 @@ type WidgetTitleProps = {
 function WidgetTitle({ children, isVisuallyHidden }: WidgetTitleProps) {
   return (
     <div className={isVisuallyHidden ? 'sr-only' : ''}>
-      <Title>{children}</Title>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+        {children}
+      </h3>
     </div>
   )
 }

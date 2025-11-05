@@ -72,7 +72,7 @@ function BarListInner<T>(
               onValueChange
                 ? [
                     "-m-0! cursor-pointer",
-                    "hover:bg-gray-50 dark:hover:bg-gray-900",
+                    "hover:bg-accent",
                   ]
                 : "",
             )}
@@ -98,7 +98,7 @@ function BarListInner<T>(
                     href={item.href}
                     className={cx(
                       "truncate whitespace-nowrap rounded-sm text-sm",
-                      "text-gray-900 dark:text-gray-50",
+                      "text-foreground",
                       "hover:underline hover:underline-offset-2",
                       focusRing,
                     )}
@@ -112,7 +112,7 @@ function BarListInner<T>(
                   <p
                     className={cx(
                       "truncate whitespace-nowrap text-sm",
-                      "text-gray-900 dark:text-gray-50",
+                      "text-foreground",
                     )}
                   >
                     {item.name}
@@ -136,7 +136,7 @@ function BarListInner<T>(
             <p
               className={cx(
                 "truncate whitespace-nowrap text-sm leading-none",
-                "text-gray-900 dark:text-gray-50",
+                "text-foreground",
               )}
             >
               {valueFormatter(item.value)}

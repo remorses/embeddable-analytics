@@ -72,8 +72,8 @@ const ChartTooltip = ({
       <div
         className={cx(
           "rounded-md border text-sm shadow-md",
-          "border-gray-200 dark:border-gray-800",
-          "bg-white dark:bg-gray-950",
+          "border-border",
+          "bg-background",
         )}
       >
         <div className={cx("space-y-1 px-4 py-2")}>
@@ -93,7 +93,7 @@ const ChartTooltip = ({
                 <p
                   className={cx(
                     "text-right whitespace-nowrap",
-                    "text-gray-700 dark:text-gray-300",
+                    "text-foreground",
                   )}
                 >
                   {category}
@@ -102,7 +102,7 @@ const ChartTooltip = ({
               <p
                 className={cx(
                   "text-right font-medium whitespace-nowrap tabular-nums",
-                  "text-gray-900 dark:text-gray-50",
+                  "text-foreground",
                 )}
               >
                 {valueFormatter(value)}
@@ -237,7 +237,7 @@ const DonutChart = React.forwardRef<HTMLDivElement, DonutChartProps>(
           >
             {showLabel && isDonut && (
               <text
-                className="fill-gray-700 dark:fill-gray-300"
+                className="fill-foreground"
                 x="50%"
                 y="50%"
                 textAnchor="middle"

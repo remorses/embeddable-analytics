@@ -33,8 +33,8 @@ const DropdownMenuSubMenuTrigger = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         'relative flex cursor-default select-none items-center rounded px-2 py-1.5 text-sm outline-none transition-colors',
-        'focus:bg-gray-100 focus:dark:bg-gray-800',
-        'data-[state=open]:bg-gray-100 data-[state=open]:dark:bg-gray-800',
+        'focus:bg-accent',
+        'data-[state=open]:bg-accent',
         inset && 'pl-8',
         className,
       )}
@@ -70,7 +70,7 @@ const DropdownMenuSubMenuContent = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         'z-50 min-w-32 overflow-hidden rounded-md border p-1 shadow-lg',
-        'border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950',
+        'border-border bg-popover',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
         'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -103,7 +103,7 @@ const DropdownMenuContent = React.forwardRef<
           collisionPadding={collisionPadding}
           className={cx(
             'z-50 min-w-48 overflow-hidden rounded-md border p-1 shadow-lg',
-            'border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950',
+            'border-border bg-popover',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
             'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -133,8 +133,8 @@ const DropdownMenuItem = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         'relative flex cursor-pointer select-none items-center rounded px-2 py-1.5 text-sm outline-none transition-colors',
-        'text-gray-900 dark:text-gray-50',
-        'focus:bg-gray-100 focus:dark:bg-gray-800',
+        'text-popover-foreground',
+        'focus:bg-accent',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         inset && 'pl-8',
         className,
@@ -155,8 +155,8 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         'relative flex cursor-default select-none items-center rounded py-1.5 pl-8 pr-2 text-sm outline-none transition-colors',
-        'text-gray-900 dark:text-gray-50',
-        'focus:bg-gray-100 focus:dark:bg-gray-800',
+        'text-popover-foreground',
+        'focus:bg-accent',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
       )}
@@ -197,8 +197,8 @@ const DropdownMenuRadioItem = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         'relative flex cursor-default select-none items-center rounded py-1.5 pl-8 pr-2 text-sm outline-none transition-colors',
-        'text-gray-900 dark:text-gray-50',
-        'focus:bg-gray-100 focus:dark:bg-gray-800',
+        'text-popover-foreground',
+        'focus:bg-accent',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
       )}
@@ -233,7 +233,7 @@ const DropdownMenuLabel = React.forwardRef<
       ref={forwardedRef}
       className={cx(
         'px-2 py-1.5 text-sm font-semibold',
-        'text-gray-900 dark:text-gray-50',
+        'text-popover-foreground',
         inset && 'pl-8',
         className,
       )}
@@ -252,7 +252,7 @@ const DropdownMenuSeparator = React.forwardRef<
     <DropdownMenuPrimitives.Separator
       ref={forwardedRef}
       className={cx(
-        '-mx-1 my-1 h-px bg-gray-200 dark:bg-gray-800',
+        '-mx-1 my-1 h-px bg-border',
         className,
       )}
       {...props}
@@ -284,7 +284,7 @@ const DropdownMenuShortcut = ({
     <span
       className={cx(
         'ml-auto text-xs tracking-widest opacity-60',
-        'text-gray-900 dark:text-gray-50',
+        'text-popover-foreground',
         className,
       )}
       {...props}

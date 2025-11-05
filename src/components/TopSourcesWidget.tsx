@@ -27,7 +27,7 @@ export default function TopSourcesWidget() {
         warning={warning?.message}
       >
         <div className="grid grid-cols-5 gap-x-4 gap-y-2">
-          <div className="col-span-4 text-xs font-semibold tracking-widest text-gray-500 uppercase h-5">
+          <div className="col-span-4 text-xs font-semibold tracking-widest text-muted-foreground uppercase h-5">
             Refs
           </div>
           <div className="col-span-1 font-semibold text-xs text-right tracking-widest uppercase h-5">

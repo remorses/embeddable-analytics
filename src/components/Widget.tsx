@@ -21,7 +21,7 @@ type WidgetTitleProps = {
 function WidgetTitle({ children, isVisuallyHidden }: WidgetTitleProps) {
   return (
     <div className={isVisuallyHidden ? 'sr-only' : ''}>
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+      <h3 className="text-lg font-semibold text-foreground">
         {children}
       </h3>
     </div>

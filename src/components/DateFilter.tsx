@@ -59,9 +59,9 @@ export default function DateFilter() {
   return (
     <div className="flex items-center gap-4">
       <div className="inline-flex items-center rounded shadow-sm">
-        <span className="rounded-l border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3 py-2 focus:z-10">
+        <span className="rounded-l border border-border bg-background px-3 py-2 focus:z-10">
           <RiCalendar2Line
-            className="size-5 shrink-0 text-gray-500 dark:text-gray-500"
+            className="size-5 shrink-0 text-muted-foreground"
             aria-hidden={true}
           />
         </span>
@@ -71,7 +71,7 @@ export default function DateFilter() {
               type="button"
               className={cx(
                 focusInput,
-                '-ml-px flex items-center gap-2 rounded-r border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 py-2 font-medium text-gray-900 dark:text-gray-50 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900 focus:z-10 focus:outline-none',
+                '-ml-px flex items-center gap-2 rounded-r border border-border bg-background px-4 py-2 font-medium text-foreground transition-colors hover:bg-accent focus:z-10 focus:outline-none',
               )}
             >
               {getSelectedLabel()}

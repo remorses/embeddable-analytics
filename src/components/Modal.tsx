@@ -41,7 +41,7 @@ const ModalContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
       <Dialog.Panel
         ref={ref}
         className={cx(
-          'bg-white rounded-xl h-auto w-full max-w-2xl mx-auto px-10 py-9 flex flex-col',
+          'bg-background rounded-xl h-auto w-full max-w-2xl mx-auto px-10 py-9 flex flex-col',
           className
         )}
         {...props}
@@ -63,7 +63,7 @@ function Modal({ children, isOpen, onClose }: ModalProps) {
   return (
     <Dialog open={isOpen} onClose={onClose}>
       <div
-        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        className="fixed inset-0 bg-muted bg-opacity-75 transition-opacity"
         aria-hidden="true"
       />
       <div className="fixed inset-0 z-10 grid place-content-center">

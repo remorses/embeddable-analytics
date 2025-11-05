@@ -38,7 +38,7 @@ export default function TopPagesWidget() {
         warning={warning?.message}
       >
         <div className="grid grid-cols-5 gap-x-4 gap-y-2">
-          <div className="col-span-3 text-xs font-semibold tracking-widest text-gray-500 uppercase h-5">
+          <div className="col-span-3 text-xs font-semibold tracking-widest text-muted-foreground uppercase h-5">
             Content
           </div>
           <div

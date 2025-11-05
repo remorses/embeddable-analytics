@@ -1,5 +1,5 @@
 {
-  "name": "embeddable-analytics",
+  "name": "@holocron.so/analytics",
   "version": "0.0.0",
   "description": "Embeddable React multi tenant analytics dashboard",
   "repository": {

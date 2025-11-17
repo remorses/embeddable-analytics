@@ -9,8 +9,7 @@ import {
   useState,
 } from 'react'
 import useSWR, { Fetcher, Key } from 'swr'
-
-import { useRouter } from 'next/router'
+import { useQueryStates, parseAsString } from 'nuqs'
 
 type DateRangePickerValue = {
   from?: Date
@@ -19,56 +18,51 @@ type DateRangePickerValue = {
 }
 
 export function useDateFilter() {
-  const router = useRouter()
+  const [params, setParams] = useQueryStates(
+    {
+      last_days: parseAsString.withDefault(DateFilter.Last7Days),
+      start_date: parseAsString,
+      end_date: parseAsString,
+    },
+    {
+      shallow: true,
+      history: 'push',
+    }
+  )
+
   const [dateRangePickerValue, setDateRangePickerValue] =
     useState<DateRangePickerValue>()
 
   const setDateFilter = ({ from, to, selectValue }: DateRangePickerValue) => {
     const lastDays = selectValue ?? DateFilter.Custom
 
-    const searchParams = new URLSearchParams(window.location.search)
-    let last_days = lastDays
-    let start_date = router.query.start_date
-    let end_date = router.query.end_date
     if (lastDays === DateFilter.Custom && from && to) {
-      start_date = format(from, dateFormat)
-      end_date = format(to, dateFormat)
+      setParams({
+        last_days: lastDays,
+        start_date: format(from, dateFormat),
+        end_date: format(to, dateFormat),
+      })
     } else {
-      start_date = undefined
-      end_date = undefined
-      searchParams.delete('end_date')
+      setParams({
+        last_days: lastDays,
+        start_date: null,
+        end_date: null,
+      })
     }
-    router.push(
-      {
-        query: {
-          ...router.query,
-          start_date,
-          end_date,
-          last_days,
-        },
-      },
-      undefined,
-      { scroll: false, shallow: true }
-    )
   }
 
-  const lastDaysParam = router.query.last_days as DateFilter
   const lastDays: DateFilter =
-    typeof lastDaysParam === 'string' &&
-    Object.values(DateFilter).includes(lastDaysParam)
-      ? lastDaysParam
+    typeof params.last_days === 'string' &&
+    Object.values(DateFilter).includes(params.last_days as DateFilter)
+      ? (params.last_days as DateFilter)
       : DateFilter.Last7Days
 
   const { from: date_from, to: date_to } = useMemo(() => {
     const today = new Date()
 
     if (lastDays === DateFilter.Custom) {
-      const fromParam = router.query.start_date as string
-      const toParam = router.query.end_date as string
-
-      const from = fromParam || format(subDays(today, 7), dateFormat)
-
-      const to = toParam || format(today, dateFormat)
+      const from = params.start_date || format(subDays(today, 7), dateFormat)
+      const to = params.end_date || format(today, dateFormat)
 
       return { from, to }
     }
@@ -80,12 +74,11 @@ export function useDateFilter() {
         : format(today, dateFormat)
 
     return { from, to }
-  }, [lastDays, router.query.start_date, router.query.end_date])
+  }, [lastDays, params.start_date, params.end_date])
 
   useEffect(() => {
     const from = new Date(date_from)
     const to = new Date(date_to)
-    // console.log({ from, to, date_from, date_to })
     setDateRangePickerValue({
       from,
       to,
@@ -101,16 +94,12 @@ export function useDateFilter() {
         setDateRangePickerValue({ from, to, selectValue })
       }
     },
-    [setDateFilter]
+    []
   )
 
-  // console.log({
-  //   date_from,
-  //   date_to,
-  // })
   return {
-    date_from: date_from,
-    date_to: date_to,
+    date_from,
+    date_to,
     dateRangePickerValue,
     onDateRangePickerValueChange,
   }

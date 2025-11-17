@@ -1,4 +1,4 @@
-import Head from 'next/head'
+
 
 const { description, imagePath, title, url } = {
   title: 'Web Analytics Dashboard  · Tinybird',
@@ -10,7 +10,7 @@ const { description, imagePath, title, url } = {
 export default function Meta() {
   const image = `${process.env.NEXT_PUBLIC_TINYBIRD_DASHBOARD_URL}${imagePath}`
   return (
-    <Head>
+    <head>
       <title>{title}</title>
       <link rel="icon" href="/favicon.ico" />
       <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -36,6 +36,6 @@ export default function Meta() {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
-    </Head>
+    </head>
   )
 }

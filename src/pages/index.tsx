@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import Meta from '../components/Meta'
 /* eslint-disable @next/next/no-img-element */
-import Script from 'next/script'
+
 import Widgets from '../components/Widgets'
 import { init } from '../track'
 

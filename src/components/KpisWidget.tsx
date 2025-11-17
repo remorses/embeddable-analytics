@@ -1,23 +1,21 @@
-import {
-  ALL_KPIS,
-  ChartValue,
-  KPI_OPTIONS,
-  KpiTotals,
-  KpiType,
-  KpisData,
-  QueryError,
-  isKpi,
-} from '../lib/types'
 import { parseAsStringLiteral, useQueryState } from 'nuqs'
 import { useDateFilter, useQuery } from '../lib/hooks'
+import {
+    ALL_KPIS,
+    ChartValue,
+    KPI_OPTIONS,
+    KpiTotals,
+    KpiType,
+    KpisData,
+    QueryError
+} from '../lib/types'
 
-import { BarChart } from './visualizations/BarChart'
-import KPIsTabs from './KpisTabs'
-import Widget from './Widget'
 import { format } from 'date-fns'
-import { getPipeFromClient } from '../lib/utils'
 import { useMemo } from 'react'
-import { useRouter } from 'next/router'
+import { getPipeFromClient } from '../lib/utils'
+import KPIsTabs from './KpisTabs'
+import { BarChart } from './visualizations/BarChart'
+import Widget from './Widget'
 
 export default function KPIsWidget() {
   const { data, kpi, setKpi, kpiOption, warning, status } = useKpis()
@@ -190,7 +188,7 @@ async function getKpis({
 
 function useKpis() {
   const { date_from, date_to } = useDateFilter()
-  const router = useRouter()
+
 
   const [kpi, setKpi] = useQueryState<KpiType>(
     'kpi',

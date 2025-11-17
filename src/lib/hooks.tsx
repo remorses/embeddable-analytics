@@ -33,24 +33,6 @@ export function useDateFilter() {
   const [dateRangePickerValue, setDateRangePickerValue] =
     useState<DateRangePickerValue>()
 
-  const setDateFilter = ({ from, to, selectValue }: DateRangePickerValue) => {
-    const lastDays = selectValue ?? DateFilter.Custom
-
-    if (lastDays === DateFilter.Custom && from && to) {
-      setParams({
-        last_days: lastDays,
-        start_date: format(from, dateFormat),
-        end_date: format(to, dateFormat),
-      })
-    } else {
-      setParams({
-        last_days: lastDays,
-        start_date: null,
-        end_date: null,
-      })
-    }
-  }
-
   const lastDays: DateFilter =
     typeof params.last_days === 'string' &&
     Object.values(DateFilter).includes(params.last_days as DateFilter)
@@ -89,12 +71,26 @@ export function useDateFilter() {
   const onDateRangePickerValueChange = useCallback(
     ({ from, to, selectValue }: DateRangePickerValue) => {
       if (from && to) {
-        setDateFilter({ from, to, selectValue })
+        const lastDays = selectValue ?? DateFilter.Custom
+
+        if (lastDays === DateFilter.Custom && from && to) {
+          setParams({
+            last_days: lastDays,
+            start_date: format(from, dateFormat),
+            end_date: format(to, dateFormat),
+          })
+        } else {
+          setParams({
+            last_days: lastDays,
+            start_date: null,
+            end_date: null,
+          })
+        }
       } else {
         setDateRangePickerValue({ from, to, selectValue })
       }
     },
-    []
+    [setParams]
   )
 
   return {
